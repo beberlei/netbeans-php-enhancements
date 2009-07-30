@@ -21,7 +21,7 @@ public final class CodeSnifferAction extends CookieAction {
 
         FileObject fo = CommandUtils.getFileObject(activatedNodes[0]);
 
-        CodeSniffer cs = new CodeSniffer("/usr/bin/phpcs2");
+        CodeSniffer cs = new CodeSniffer("/usr/local/bin/phpcs");
         cs.execute(fo);
     }
 

@@ -5,8 +5,11 @@
 
 package de.whitewashing.php.cs;
 
+import java.io.ByteArrayInputStream;
+import java.io.CharArrayReader;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,21 +24,22 @@ import javax.xml.parsers.*;
  */
 class CodeSnifferXmlLogParser {
     
-    CodeSnifferXmlLogResult parse(File f)
+    CodeSnifferXmlLogResult parse(StringBuilder sb)
     {
         List<CodingStandardWarning> csWarnings = new ArrayList<CodingStandardWarning>();
         List<CodingStandardError> csErrors = new ArrayList<CodingStandardError>();
 
-        if(f == null || f.exists() == false || f.canRead() == false) {
-            return new CodeSnifferXmlLogResult(csErrors, csWarnings);
-        }
-
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
+
+            InputSource is = new InputSource(
+                new CharArrayReader(sb.toString().toCharArray())
+            );
+
             builder = factory.newDocumentBuilder();
             Document document;
-            document = builder.parse(f);
+            document = builder.parse(is);
             NodeList ndList = document.getElementsByTagName("warning");
             int lineNum = 0;
             for (int i = 0; i < ndList.getLength(); i++) {

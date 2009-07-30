@@ -4,7 +4,9 @@
  */
 package de.whitewashing.php.cs;
 
+import java.io.IOException;
 import java.util.concurrent.ExecutionException;
+import org.netbeans.api.extexecution.input.InputProcessor;
 import org.netbeans.modules.php.project.util.PhpProgram;
 import java.io.File;
 import java.util.concurrent.Future;
@@ -30,6 +32,8 @@ public class CodeSniffer extends PhpProgram {
     public static final String OUTPUT_REDIRECT = System.getProperty("java.io.tmpdir") + "/nb-phpcs-log.xml";
     public static final File XML_LOG = new File(System.getProperty("java.io.tmpdir"), "nb-phpcs-log.xml"); // NOI18N
 
+    public StringBuilder output = null;
+
     public CodeSniffer(String command) {
         super(command);
     }
@@ -39,10 +43,32 @@ public class CodeSniffer extends PhpProgram {
 
         ExternalProcessBuilder externalProcessBuilder = new ExternalProcessBuilder(this.getProgram())
                 .workingDirectory(parent)
-                .addArgument(fo.getNameExt())
-                .addArgument(OUTPUT_REDIRECT);
+                .addArgument(PARAM_REPORT)
+                .addArgument(fo.getNameExt());
 
-        ExecutionDescriptor descriptor = new ExecutionDescriptor().frontWindow(false).controllable(false);
+        this.output = new StringBuilder();
+
+        ExecutionDescriptor descriptor = new ExecutionDescriptor()
+                .frontWindow(false)
+                .controllable(false)
+                .outProcessorFactory(
+                    new ExecutionDescriptor.InputProcessorFactory() {
+                        public InputProcessor newInputProcessor(InputProcessor defaultProcessor) {
+                            return new InputProcessor() {
+                                boolean started = false;
+                                public void processInput(char[] chars) throws IOException {
+                                    output.append(chars);
+                                }
+
+                                public void reset() throws IOException {
+                                }
+
+                                public void close() throws IOException {
+                                }
+                            };
+                        }
+                    }
+                );
 
         ExecutionService service = ExecutionService.newService(externalProcessBuilder,
                 descriptor, "PHP Coding Standards");
@@ -64,8 +90,14 @@ public class CodeSniffer extends PhpProgram {
 
     private void annotateWithCodingStandardHints(FileObject fo)
     {
+        System.err.println("### MANUEL PICHLER ###");
+        System.err.print(this.output.toString());
+        System.err.flush();
+
+        StringBuilder sb = new StringBuilder(this.output.substring(this.output.indexOf("<")));
+
         CodeSnifferXmlLogParser parser = new CodeSnifferXmlLogParser();
-        CodeSnifferXmlLogResult rs = parser.parse(XML_LOG);
+        CodeSnifferXmlLogResult rs = parser.parse(sb);
 
         try {
             DataObject d = DataObject.find(fo);
