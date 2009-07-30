@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE type PUBLIC
+          "-//NetBeans//DTD annotation type 1.0//EN"
+          "http://www.netbeans.org/dtds/annotation-type-1_0.dtd">
+<type name="de-whitewashing-php-cs-annotation-warning"
+      visible="true"
+      glyph="nbresloc:/de/whitewashing/php/cs/resources/cswarn.png"
+      highlight="#FFFBCF"
+      type="line"
+/>

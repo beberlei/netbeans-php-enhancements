@@ -1,0 +1,16 @@
+PHP Code Sniffer Support for Netbeans PHP. Right Click on an Open file:
+=>  "Check Coding Standards"
+
+No Warranty whatsoever for this, it might break your Netbeans ;-)
+
+Only tested with netbeans 6.7, uses APIs that are not in 6.5
+
+Only works on unix, since i hardcoded the execution of the Coding Sniffer to:
+
+/usr/bin/phpcs2
+
+You have to create a script at this location which does the following:
+
+#!/bin/bash
+phpcs --standard=Zend --report=xml "$1" > "$2"
+

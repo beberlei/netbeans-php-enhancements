@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpcs version="1.1.0">
+ <file name="/home/benny/code/www/wsnetbeans/ZendMapper/library/Zend/Entity/Manager.php" errors="13" warnings="18">
+  <warning line="66" column="82">Line exceeds 80 characters; contains 81 characters</warning>
+  <error line="70" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <error line="74" column="9">Expected &quot;foreach (...) {\n&quot;; found &quot;foreach(...) {\n&quot;</error>
+  <error line="76" column="13">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <warning line="110" column="95">Line exceeds 80 characters; contains 94 characters</warning>
+  <error line="123" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <warning line="125" column="97">Line exceeds 80 characters; contains 96 characters</warning>
+  <error line="157" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <warning line="166" column="85">Line exceeds 80 characters; contains 84 characters</warning>
+  <error line="181" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <error line="183" column="11">Expected &quot;} else if (...) {\n&quot;; found &quot;} else if(...) {\n&quot;</error>
+  <error line="183" column="16">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <error line="189" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <warning line="204" column="91">Line exceeds 80 characters; contains 90 characters</warning>
+  <warning line="205" column="107">Line exceeds 80 characters; contains 106 characters</warning>
+  <error line="215" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <warning line="215" column="88">Line exceeds 80 characters; contains 87 characters</warning>
+  <warning line="220" column="82">Line exceeds 80 characters; contains 81 characters</warning>
+  <warning line="222" column="82">Line exceeds 80 characters; contains 81 characters</warning>
+  <error line="244" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <warning line="245" column="82">Line exceeds 80 characters; contains 81 characters</warning>
+  <warning line="262" column="1">Line exceeds 80 characters; contains 84 characters</warning>
+  <warning line="274" column="1">Line exceeds 80 characters; contains 84 characters</warning>
+  <error line="281" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <warning line="306" column="1">Line exceeds 80 characters; contains 93 characters</warning>
+  <warning line="307" column="1">Line exceeds 80 characters; contains 96 characters</warning>
+  <error line="315" column="9">Expected &quot;if (...) {\n&quot;; found &quot;if(...) {\n&quot;</error>
+  <warning line="315" column="95">Line exceeds 80 characters; contains 94 characters</warning>
+  <warning line="320" column="97">Line exceeds 80 characters; contains 96 characters</warning>
+  <warning line="357" column="1">Line exceeds 80 characters; contains 81 characters</warning>
+  <warning line="367" column="1">Line exceeds 80 characters; contains 89 characters</warning>
+ </file>
+</phpcs>

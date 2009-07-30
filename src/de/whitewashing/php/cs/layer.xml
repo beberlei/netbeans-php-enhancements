@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<filesystem>
+    <folder name="Actions">
+        <folder name="PHP">
+            <file name="de-whitewashing-php-cs-CodeSnifferAction.instance"/>
+        </folder>
+    </folder>
+    <folder name="Editors">
+        <folder name="text">
+            <folder name="x-php5">
+                <folder name="Popup">
+                    <file name="de-whitewashing-php-cs-CodeSnifferAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/PHP/de-whitewashing-php-cs-CodeSnifferAction.instance"/>
+                        <attr name="position" intvalue="875"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+
+        <folder name="AnnotationTypes">
+            <file name="de-whitewashing-php-cs-annotation-warning.xml" url="nbresloc:/de/whitewashing/php/cs/resources/cs-warn-annotation.xml" />
+            <file name="de-whitewashing-php-cs-annotation-error.xml" url="nbresloc:/de/whitewashing/php/cs/resources/cs-error-annotation.xml" />
+        </folder>
+    </folder>
+    <folder name="Loaders">
+        <folder name="text">
+            <folder name="x-php5">
+                <folder name="Actions">
+                    <file name="de-whitewashing-php-cs-CodeSnifferAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/PHP/de-whitewashing-php-cs-CodeSnifferAction.instance"/>
+                        <attr name="position" intvalue="1550"/>
+                    </file>
+                </folder>
+            </folder>
+        </folder>
+    </folder>
+</filesystem>
