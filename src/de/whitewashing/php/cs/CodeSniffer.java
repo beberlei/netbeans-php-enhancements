@@ -90,14 +90,8 @@ public class CodeSniffer extends PhpProgram {
 
     private void annotateWithCodingStandardHints(FileObject fo)
     {
-        System.err.println("### MANUEL PICHLER ###");
-        System.err.print(this.output.toString());
-        System.err.flush();
-
-        StringBuilder sb = new StringBuilder(this.output.substring(this.output.indexOf("<")));
-
         CodeSnifferXmlLogParser parser = new CodeSnifferXmlLogParser();
-        CodeSnifferXmlLogResult rs = parser.parse(sb);
+        CodeSnifferXmlLogResult rs = parser.parse(this.output);
 
         try {
             DataObject d = DataObject.find(fo);
