@@ -10,6 +10,7 @@ import java.io.CharArrayReader;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,7 +25,7 @@ import javax.xml.parsers.*;
  */
 class CodeSnifferXmlLogParser {
     
-    CodeSnifferXmlLogResult parse(StringBuilder sb)
+    CodeSnifferXmlLogResult parse(Reader reader)
     {
         List<CodingStandardWarning> csWarnings = new ArrayList<CodingStandardWarning>();
         List<CodingStandardError> csErrors = new ArrayList<CodingStandardError>();
@@ -32,14 +33,9 @@ class CodeSnifferXmlLogParser {
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
         try {
-
-            InputSource is = new InputSource(
-                new CharArrayReader(sb.toString().toCharArray())
-            );
-
             builder = factory.newDocumentBuilder();
             Document document;
-            document = builder.parse(is);
+            document = builder.parse(new InputSource(reader));
             NodeList ndList = document.getElementsByTagName("warning");
             int lineNum = 0;
             for (int i = 0; i < ndList.getLength(); i++) {

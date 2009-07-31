@@ -29,10 +29,8 @@ public class CodeSniffer extends PhpProgram {
 
     public static final String PARAM_STANDARD = "--standard=Zend";
     public static final String PARAM_REPORT = "--report=xml";
-    public static final String OUTPUT_REDIRECT = System.getProperty("java.io.tmpdir") + "/nb-phpcs-log.xml";
-    public static final File XML_LOG = new File(System.getProperty("java.io.tmpdir"), "nb-phpcs-log.xml"); // NOI18N
 
-    public StringBuilder output = null;
+    public CodeSnifferOutput output = null;
 
     public CodeSniffer(String command) {
         super(command);
@@ -46,29 +44,13 @@ public class CodeSniffer extends PhpProgram {
                 .addArgument(PARAM_REPORT)
                 .addArgument(fo.getNameExt());
 
-        this.output = new StringBuilder();
+        this.output = new CodeSnifferOutput();
+
 
         ExecutionDescriptor descriptor = new ExecutionDescriptor()
                 .frontWindow(false)
                 .controllable(false)
-                .outProcessorFactory(
-                    new ExecutionDescriptor.InputProcessorFactory() {
-                        public InputProcessor newInputProcessor(InputProcessor defaultProcessor) {
-                            return new InputProcessor() {
-                                boolean started = false;
-                                public void processInput(char[] chars) throws IOException {
-                                    output.append(chars);
-                                }
-
-                                public void reset() throws IOException {
-                                }
-
-                                public void close() throws IOException {
-                                }
-                            };
-                        }
-                    }
-                );
+                .outProcessorFactory(this.output);
 
         ExecutionService service = ExecutionService.newService(externalProcessBuilder,
                 descriptor, "PHP Coding Standards");
@@ -91,7 +73,7 @@ public class CodeSniffer extends PhpProgram {
     private void annotateWithCodingStandardHints(FileObject fo)
     {
         CodeSnifferXmlLogParser parser = new CodeSnifferXmlLogParser();
-        CodeSnifferXmlLogResult rs = parser.parse(this.output);
+        CodeSnifferXmlLogResult rs = parser.parse(this.output.getReader());
 
         try {
             DataObject d = DataObject.find(fo);

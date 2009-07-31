@@ -4,6 +4,9 @@
  */
 package de.whitewashing.php.cs;
 
+import java.io.File;
+
+import javax.swing.JMenuItem;
 import org.netbeans.modules.php.project.ui.actions.support.CommandUtils;
 import org.openide.cookies.EditorCookie;
 import org.openide.nodes.Node;
@@ -14,14 +17,20 @@ import org.openide.filesystems.FileObject;
 
 public final class CodeSnifferAction extends CookieAction {
 
+    private CodeSnifferBinary binary = null;
+
     protected void performAction(Node[] activatedNodes) {
         if(activatedNodes.length != 1) {
             return;
         }
 
+        if (this.binary.exists() == false) {
+            return;
+        }
+
         FileObject fo = CommandUtils.getFileObject(activatedNodes[0]);
 
-        CodeSniffer cs = new CodeSniffer("/usr/local/bin/phpcs");
+        CodeSniffer cs = new CodeSniffer(this.binary.getPath());
         cs.execute(fo);
     }
 
@@ -42,6 +51,20 @@ public final class CodeSnifferAction extends CookieAction {
         super.initialize();
         // see org.openide.util.actions.SystemAction.iconResource() Javadoc for more details
         putValue("noIconInMenu", Boolean.TRUE);
+
+        this.binary = new CodeSnifferBinary();
+    }
+
+    @Override
+    public JMenuItem getPopupPresenter()
+    {
+        return this.setEnabledForExistingBinary(super.getPopupPresenter());
+    }
+
+    @Override
+    public JMenuItem getMenuPresenter()
+    {
+        return this.setEnabledForExistingBinary(super.getMenuPresenter());
     }
 
     public HelpCtx getHelpCtx() {
@@ -51,6 +74,12 @@ public final class CodeSnifferAction extends CookieAction {
     @Override
     protected boolean asynchronous() {
         return false;
+    }
+
+    protected JMenuItem setEnabledForExistingBinary(JMenuItem item)
+    {
+        item.setEnabled(this.binary.exists());
+        return item;
     }
 }
 
