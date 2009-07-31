@@ -4,9 +4,7 @@
  */
 package de.whitewashing.php.cs;
 
-import java.io.IOException;
 import java.util.concurrent.ExecutionException;
-import org.netbeans.api.extexecution.input.InputProcessor;
 import org.netbeans.modules.php.project.util.PhpProgram;
 import java.io.File;
 import java.util.concurrent.Future;

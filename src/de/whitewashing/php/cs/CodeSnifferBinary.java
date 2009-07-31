@@ -65,10 +65,4 @@ public class CodeSnifferBinary {
         }
         return this.pathName;
     }
-
-    public static void main(String[] args)
-    {
-        CodeSnifferBinary cs = new CodeSnifferBinary();
-        cs.findBinary();
-    }
 }

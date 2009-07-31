@@ -4,8 +4,6 @@
  */
 package de.whitewashing.php.cs;
 
-import java.io.File;
-
 import javax.swing.JMenuItem;
 import org.netbeans.modules.php.project.ui.actions.support.CommandUtils;
 import org.openide.cookies.EditorCookie;
