@@ -1,8 +1,12 @@
-PHP Code Sniffer Support for Netbeans PHP. Right Click on an Open file:
-=>  "Check Coding Standards"
+Netbeans PHP Editor Extensions:
+
+Currently this module has two little features:
+
+1. PHP Coding Standards Support for the Todolist Window
+2. Additionall "Show Coding Standards Violations" for Inline Highlighting of Violations
 
 No Warranty whatsoever for this, it might break your Netbeans ;-)
 
 Only tested with netbeans 6.7, uses APIs that are not in 6.5.
-The module scans for the "phpcs" executable inside the enviroment
-path.
+
+The module automatically scans for the "phpcs" executable inside the enviroment path.
