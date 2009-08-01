@@ -29,7 +29,11 @@ public final class CodeSnifferAction extends CookieAction {
         FileObject fo = CommandUtils.getFileObject(activatedNodes[0]);
 
         CodeSniffer cs = new CodeSniffer(this.binary.getPath());
-        cs.execute(fo);
+        CodeSnifferXmlLogResult rs = cs.execute(fo);
+
+        /*ViolationsReportTopComponent c = ViolationsReportTopComponent.findInstance();
+        c.appendCodeSnifferXmlLogResult(rs);
+        c.revalidate();*/
     }
 
     protected int mode() {

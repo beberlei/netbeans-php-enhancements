@@ -7,6 +7,10 @@ package de.whitewashing.php.cs;
 
 import java.io.IOException;
 import java.io.Reader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +24,20 @@ import javax.xml.parsers.*;
  * @author benny
  */
 class CodeSnifferXmlLogParser {
-    
+
+    CodeSnifferXmlLogResult parse(File fo)
+    {
+        if(fo == null || fo.exists() == false) {
+            return createEmptyResult();
+        }
+
+        try {
+            return parse(new InputStreamReader(new FileInputStream(fo)));
+        } catch(FileNotFoundException e) {
+            return createEmptyResult();
+        }
+    }
+
     CodeSnifferXmlLogResult parse(Reader reader)
     {
         List<CodingStandardWarning> csWarnings = new ArrayList<CodingStandardWarning>();
@@ -54,6 +71,14 @@ class CodeSnifferXmlLogParser {
         } catch (SAXException ex) {
             Exceptions.printStackTrace(ex);
         }
+
+        return new CodeSnifferXmlLogResult(csErrors, csWarnings);
+    }
+
+    private CodeSnifferXmlLogResult createEmptyResult()
+    {
+        List<CodingStandardWarning> csWarnings = new ArrayList<CodingStandardWarning>();
+        List<CodingStandardError> csErrors = new ArrayList<CodingStandardError>();
 
         return new CodeSnifferXmlLogResult(csErrors, csWarnings);
     }

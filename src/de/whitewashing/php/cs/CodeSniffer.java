@@ -34,7 +34,7 @@ public class CodeSniffer extends PhpProgram {
         super(command);
     }
 
-    public void execute(FileObject fo) {
+    CodeSnifferXmlLogResult execute(FileObject fo) {
         final File parent = FileUtil.toFile(fo.getParent());
 
         ExternalProcessBuilder externalProcessBuilder = new ExternalProcessBuilder(this.getProgram())
@@ -59,16 +59,14 @@ public class CodeSniffer extends PhpProgram {
             task.get();
         } catch (InterruptedException ex) {
             Exceptions.printStackTrace(ex);
-            return;
         } catch (ExecutionException ex) {
             Exceptions.printStackTrace(ex);
-            return;
         }
 
-        annotateWithCodingStandardHints(fo);
+        return annotateWithCodingStandardHints(fo);
     }
 
-    private void annotateWithCodingStandardHints(FileObject fo)
+    private CodeSnifferXmlLogResult annotateWithCodingStandardHints(FileObject fo)
     {
         CodeSnifferXmlLogParser parser = new CodeSnifferXmlLogParser();
         CodeSnifferXmlLogResult rs = parser.parse(this.output.getReader());
@@ -94,5 +92,7 @@ public class CodeSniffer extends PhpProgram {
         } catch (DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }
+
+        return rs;
     }
 }

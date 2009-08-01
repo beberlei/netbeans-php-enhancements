@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.1//EN" "http://www.netbeans.org/dtds/filesystem-1_1.dtd">
+<!DOCTYPE filesystem PUBLIC "-//NetBeans//DTD Filesystem 1.2//EN" "http://www.netbeans.org/dtds/filesystem-1_2.dtd">
 <filesystem>
     <folder name="Actions">
         <folder name="PHP">
@@ -19,8 +19,8 @@
         </folder>
 
         <folder name="AnnotationTypes">
-            <file name="de-whitewashing-php-cs-annotation-warning.xml" url="nbresloc:/de/whitewashing/php/cs/resources/cs-warn-annotation.xml" />
-            <file name="de-whitewashing-php-cs-annotation-error.xml" url="nbresloc:/de/whitewashing/php/cs/resources/cs-error-annotation.xml" />
+            <file name="de-whitewashing-php-cs-annotation-warning.xml" url="nbresloc:/de/whitewashing/php/cs/resources/cs-warn-annotation.xml"/>
+            <file name="de-whitewashing-php-cs-annotation-error.xml" url="nbresloc:/de/whitewashing/php/cs/resources/cs-error-annotation.xml"/>
         </folder>
     </folder>
     <folder name="Loaders">
@@ -33,6 +33,14 @@
                     </file>
                 </folder>
             </folder>
+        </folder>
+    </folder>
+    <folder name="TaskList">
+        <folder name="Scanners">
+            <file name="CodingStandardViolationsProvider.instance">
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.tasklist.FileTaskScanner"/>
+                <attr name="instanceClass" stringvalue="de.whitewashing.php.cs.ViolationsProvider"/>
+            </file>
         </folder>
     </folder>
 </filesystem>
