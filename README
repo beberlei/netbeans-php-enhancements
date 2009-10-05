@@ -1,12 +1,22 @@
 Netbeans PHP Editor Extensions:
+==============================
+
+No Warranty whatsoever for this, it might break your Netbeans ;-)
+Only tested with netbeans 6.7, uses APIs that are not in 6.5.
+The module automatically scans for the "phpcs" executable inside the enviroment path.
 
 Currently this module has two little features:
 
 1. PHP Coding Standards Support for the Todolist Window
 2. Additionall "Show Coding Standards Violations" for Inline Highlighting of Violations
 
-No Warranty whatsoever for this, it might break your Netbeans ;-)
+TODOLIST WINDOW
+==============
 
-Only tested with netbeans 6.7, uses APIs that are not in 6.5.
+To enable the Todo List CS Scanning you have to right click on the Filter Icon
+and Select "Coding Standards". Then you ahve to click the uppermost icon that
+enables "Current File Scope".
 
-The module automatically scans for the "phpcs" executable inside the enviroment path.
+For performance reasons the PHPCS plugin will only work in this mode, which
+means only the coding standard violations of the current file are shown
+in the task window.
