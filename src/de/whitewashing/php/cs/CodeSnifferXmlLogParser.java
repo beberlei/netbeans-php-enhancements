@@ -65,11 +65,13 @@ class CodeSnifferXmlLogParser {
                 csErrors.add(new CodingStandardError(message, lineNum));
             }
         } catch (IOException ex) {
-            Exceptions.printStackTrace(ex);
+            
         } catch (ParserConfigurationException ex) {
-            Exceptions.printStackTrace(ex);
+            
+        } catch(SAXParseException ex) {
+            
         } catch (SAXException ex) {
-            Exceptions.printStackTrace(ex);
+            
         }
 
         return new CodeSnifferXmlLogResult(csErrors, csWarnings);

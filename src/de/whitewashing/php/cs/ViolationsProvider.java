@@ -7,15 +7,16 @@ package de.whitewashing.php.cs;
 
 import java.util.List;
 import java.util.ArrayList;
-import org.netbeans.spi.tasklist.FileTaskScanner;
+import org.netbeans.spi.tasklist.PushTaskScanner;
 import org.netbeans.spi.tasklist.Task;
+import org.netbeans.spi.tasklist.TaskScanningScope;
 import org.openide.filesystems.FileObject;
 
 /**
  *
  * @author benny
  */
-public class ViolationsProvider extends FileTaskScanner {
+public class ViolationsProvider extends PushTaskScanner {
 
     private CodeSnifferBinary codeSnifferBinary = null;
     private CodeSniffer cs = null;
@@ -38,10 +39,6 @@ public class ViolationsProvider extends FileTaskScanner {
     public List<? extends Task> scan(FileObject fo) {
         List<Task> violations = new ArrayList<Task>();
 
-        if(!fo.getMIMEType().equals("x-php5")) {
-            return violations;
-        }
-
         if(codeSnifferBinary.exists() == true) {
             CodeSnifferXmlLogResult rs = getCodeSniffer().execute(fo);
 
@@ -60,8 +57,19 @@ public class ViolationsProvider extends FileTaskScanner {
         return violations;
     }
 
-    public void attach(Callback arg0) {
-        
-    }
+    public void setScope(TaskScanningScope scope, Callback callback) {
+        if (scope == null || callback == null) {
+            return;
+        }
 
+        int i = 0;
+        for (FileObject file : scope.getLookup().lookupAll(FileObject.class)) {
+            if(i >= 1) {
+                return;
+            }
+
+            callback.setTasks(file, scan(file));
+            i++;
+        }
+    }
 }

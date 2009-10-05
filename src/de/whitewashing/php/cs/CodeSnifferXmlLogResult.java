@@ -5,15 +5,19 @@
 
 package de.whitewashing.php.cs;
 
+import java.util.ArrayList;
 import java.util.List;
-
-
 
 /**
  *
  * @author benny
  */
 class CodeSnifferXmlLogResult {
+
+    static public CodeSnifferXmlLogResult empty()
+    {
+        return new CodeSnifferXmlLogResult(new ArrayList<CodingStandardError>(), new ArrayList <CodingStandardWarning>());
+    }
 
     private List<CodingStandardError> csErrors = null;
     private List<CodingStandardWarning> csWarnings = null;

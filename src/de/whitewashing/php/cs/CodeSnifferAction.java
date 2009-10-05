@@ -5,9 +5,9 @@
 package de.whitewashing.php.cs;
 
 import javax.swing.JMenuItem;
-import org.netbeans.modules.php.project.ui.actions.support.CommandUtils;
 import org.openide.cookies.EditorCookie;
 import org.openide.nodes.Node;
+import org.openide.loaders.DataObject;
 import org.openide.util.HelpCtx;
 import org.openide.util.NbBundle;
 import org.openide.util.actions.CookieAction;
@@ -26,14 +26,35 @@ public final class CodeSnifferAction extends CookieAction {
             return;
         }
 
-        FileObject fo = CommandUtils.getFileObject(activatedNodes[0]);
+        FileObject fo = getFileObject(activatedNodes[0]);
 
         CodeSniffer cs = new CodeSniffer(this.binary.getPath());
-        CodeSnifferXmlLogResult rs = cs.execute(fo);
+        cs.execute(fo);
+    }
 
-        /*ViolationsReportTopComponent c = ViolationsReportTopComponent.findInstance();
-        c.appendCodeSnifferXmlLogResult(rs);
-        c.revalidate();*/
+    /**
+     * Copied from org.netbeans.modules.php.project.ui.actions.support.CommandUtils
+     * 
+     * @param node
+     * @return
+     */
+    private FileObject getFileObject(Node node)
+    {
+        assert node != null;
+
+        FileObject fileObj = node.getLookup().lookup(FileObject.class);
+        if (fileObj != null && fileObj.isValid()) {
+            return fileObj;
+        }
+        DataObject dataObj = node.getCookie(DataObject.class);
+        if (dataObj == null) {
+            return null;
+        }
+        fileObj = dataObj.getPrimaryFile();
+        if (fileObj != null && fileObj.isValid()) {
+            return fileObj;
+        }
+        return null;
     }
 
     protected int mode() {

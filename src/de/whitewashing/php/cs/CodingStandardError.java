@@ -5,38 +5,19 @@
 
 package de.whitewashing.php.cs;
 
-import org.openide.text.Annotation;
-
 /**
  *
  * @author benny
  */
-public class CodingStandardError extends Annotation {
+public class CodingStandardError extends CodingStandardViolation {
 
-    private String error = null;
-    private int lineNum = 0;
-
-    public CodingStandardError(String error, int lineNum)
+    public CodingStandardError(String msg, int lineNum)
     {
-        this.error = error;
-        this.lineNum = lineNum;
-    }
-
-    public CodingStandardError(String error)
-    {
-        this.error = error;
+        super(msg, lineNum);
     }
 
     public String getAnnotationType() {
         return "de-whitewashing-php-cs-annotation-error";
-    }
-
-    public String getShortDescription() {
-        return error;
-    }
-
-    public int getLineNum() {
-        return lineNum;
     }
 }
 

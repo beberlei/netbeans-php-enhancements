@@ -5,9 +5,10 @@
 package de.whitewashing.php.cs;
 
 import java.util.concurrent.ExecutionException;
-import org.netbeans.modules.php.project.util.PhpProgram;
+import java.util.prefs.BackingStoreException;
 import java.io.File;
 import java.util.concurrent.Future;
+import java.util.prefs.Preferences;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
@@ -16,6 +17,7 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
+import org.openide.util.NbPreferences;
 import org.openide.loaders.DataObject;
 import org.openide.text.Line;
 
@@ -23,22 +25,43 @@ import org.openide.text.Line;
  *
  * @author benny
  */
-public class CodeSniffer extends PhpProgram {
-
-    public static final String PARAM_STANDARD = "--standard=Zend";
+public class CodeSniffer
+{
+    public static final String PARAM_STANDARD = "--standard=%s";
     public static final String PARAM_REPORT = "--report=xml";
 
     public CodeSnifferOutput output = null;
 
+    protected String command = null;
+
     public CodeSniffer(String command) {
-        super(command);
+        this.command = command;
+    }
+
+    private String getCodingStandard()
+    {
+        Preferences pref = NbPreferences.root();
+        try {
+            if (!pref.nodeExists("phpcs.codingStandard")) {
+                pref.put("phpcs.codingStandard", "Zend");
+            }
+        } catch (BackingStoreException ex) {
+            Exceptions.printStackTrace(ex);
+        }
+
+        return pref.get("phpcs.codingStandard", "Zend");
     }
 
     CodeSnifferXmlLogResult execute(FileObject fo) {
         final File parent = FileUtil.toFile(fo.getParent());
 
-        ExternalProcessBuilder externalProcessBuilder = new ExternalProcessBuilder(this.getProgram())
+        if(parent == null) {
+            return CodeSnifferXmlLogResult.empty();
+        }
+
+        ExternalProcessBuilder externalProcessBuilder = new ExternalProcessBuilder(this.command)
                 .workingDirectory(parent)
+                .addArgument(String.format(PARAM_STANDARD, getCodingStandard()))
                 .addArgument(PARAM_REPORT)
                 .addArgument(fo.getNameExt());
 
