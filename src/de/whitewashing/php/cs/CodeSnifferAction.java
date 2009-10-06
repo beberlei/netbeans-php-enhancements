@@ -29,7 +29,7 @@ public final class CodeSnifferAction extends CookieAction {
         FileObject fo = getFileObject(activatedNodes[0]);
 
         CodeSniffer cs = new CodeSniffer(this.binary.getPath());
-        cs.execute(fo);
+        cs.execute(fo, true);
     }
 
     /**

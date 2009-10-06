@@ -52,7 +52,12 @@ public class CodeSniffer
         return pref.get("phpcs.codingStandard", "Zend");
     }
 
-    CodeSnifferXmlLogResult execute(FileObject fo) {
+    CodeSnifferXmlLogResult execute(FileObject fo)
+    {
+        return execute(fo, false);
+    }
+
+    CodeSnifferXmlLogResult execute(FileObject fo, boolean annotateLines) {
         final File parent = FileUtil.toFile(fo.getParent());
 
         if(parent == null) {
@@ -93,6 +98,10 @@ public class CodeSniffer
     {
         CodeSnifferXmlLogParser parser = new CodeSnifferXmlLogParser();
         CodeSnifferXmlLogResult rs = parser.parse(this.output.getReader());
+
+        CodeSnifferFileListener l = new CodeSnifferFileListener();
+        l.setLogResult(rs);
+        fo.addFileChangeListener(l);
 
         try {
             DataObject d = DataObject.find(fo);

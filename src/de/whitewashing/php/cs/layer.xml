@@ -38,7 +38,7 @@
     <folder name="TaskList">
         <folder name="Scanners">
             <file name="CodingStandardViolationsProvider.instance">
-                <attr name="instanceOf" stringvalue="org.netbeans.spi.tasklist.FileTaskScanner"/>
+                <attr name="instanceOf" stringvalue="org.netbeans.spi.tasklist.PushTaskScanner"/>
                 <attr name="instanceClass" stringvalue="de.whitewashing.php.cs.ViolationsProvider"/>
             </file>
         </folder>
