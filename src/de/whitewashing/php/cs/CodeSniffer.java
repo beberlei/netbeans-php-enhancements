@@ -91,14 +91,17 @@ public class CodeSniffer
             Exceptions.printStackTrace(ex);
         }
 
-        return annotateWithCodingStandardHints(fo);
-    }
-
-    private CodeSnifferXmlLogResult annotateWithCodingStandardHints(FileObject fo)
-    {
         CodeSnifferXmlLogParser parser = new CodeSnifferXmlLogParser();
         CodeSnifferXmlLogResult rs = parser.parse(this.output.getReader());
 
+        if(annotateLines) {
+            annotateWithCodingStandardHints(fo, rs);
+        }
+        return rs;
+    }
+
+    private void annotateWithCodingStandardHints(FileObject fo, CodeSnifferXmlLogResult rs)
+    {
         CodeSnifferFileListener l = new CodeSnifferFileListener();
         l.setLogResult(rs);
         fo.addFileChangeListener(l);
@@ -124,7 +127,5 @@ public class CodeSniffer
         } catch (DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
         }
-
-        return rs;
     }
 }
