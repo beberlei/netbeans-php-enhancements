@@ -7,16 +7,44 @@ The module automatically scans for the "phpcs" executable inside the enviroment 
 
 Currently this module has two little features:
 
-1. PHP Coding Standards Support for the Todolist Window
+1. PHP Coding Standards Support for the Tasks Window
 2. Additionall "Show Coding Standards Violations" for Inline Highlighting of Violations
 
-TODOLIST WINDOW
+TASK WINDOW
 ==============
 
+Open up the Tasks Window from "Window - Tasks" or CTRL+6.
+
 To enable the Todo List CS Scanning you have to right click on the Filter Icon
-and Select "Coding Standards". Then you ahve to click the uppermost icon that
-enables "Current File Scope".
+and Select "Edit". Add a New Filter "Coding Standards" and activate only "PHP Coding Standards"
+as task group and confirm. Then you have to click the uppermost icon on the left
+of the tasks window that enables "Current File Scope".
 
 For performance reasons the PHPCS plugin will only work in this mode, which
 means only the coding standard violations of the current file are shown
 in the task window.
+
+SHOW CODING VIOLATIONS
+======================
+
+Per right click on the Editor window you can select "Show Coding Standard" which
+highlights lines with warnings and errors. This highlights disappear when the file
+is changed and saved.
+
+CONFIGURE CODING-STANDARD
+=========================
+
+Currently the coding standard can only be changed by digging in the Netbeans config.
+
+On a linux System open:
+
+/home/<username>/.netbeans/6.7/config/Preferences.properties
+
+On windows open:
+
+C:\Users\<user>\..setingsorsuch..\.netbeans\6.7\config\Preferences.properties
+
+Set:
+phpcs.codingStandard=
+
+To the name of your Coding Standard, for example PHPCS, Zend or such.
