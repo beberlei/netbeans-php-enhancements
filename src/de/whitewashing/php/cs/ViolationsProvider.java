@@ -39,6 +39,10 @@ public class ViolationsProvider extends PushTaskScanner {
     public List<? extends Task> scan(FileObject fo) {
         List<Task> violations = new ArrayList<Task>();
 
+        if(!fo.hasExt("php") && !fo.hasExt("php5") && !fo.hasExt("phtml")) {
+            return violations;
+        }
+
         if(codeSnifferBinary.exists() == true) {
             CodeSnifferXmlLogResult rs = getCodeSniffer().execute(fo);
 

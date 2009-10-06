@@ -5,8 +5,6 @@
 
 package de.whitewashing.php.cs;
 
-import java.util.ArrayList;
-import java.util.List;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 
