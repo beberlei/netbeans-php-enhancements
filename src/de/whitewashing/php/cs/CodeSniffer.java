@@ -5,7 +5,6 @@
 package de.whitewashing.php.cs;
 
 import java.util.concurrent.ExecutionException;
-import java.util.prefs.BackingStoreException;
 import java.io.File;
 import java.util.concurrent.Future;
 import java.util.prefs.Preferences;
@@ -41,14 +40,6 @@ public class CodeSniffer
     private String getCodingStandard()
     {
         Preferences pref = NbPreferences.root();
-        try {
-            if (!pref.nodeExists("phpcs.codingStandard")) {
-                pref.put("phpcs.codingStandard", "Zend");
-            }
-        } catch (BackingStoreException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
         return pref.get("phpcs.codingStandard", "Zend");
     }
 
