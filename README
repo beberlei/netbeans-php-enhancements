@@ -34,17 +34,5 @@ is changed and saved.
 CONFIGURE CODING-STANDARD
 =========================
 
-Currently the coding standard can only be changed by digging in the Netbeans config.
-
-On a linux System open:
-
-/home/<username>/.netbeans/6.7/config/Preferences.properties
-
-On windows open:
-
-C:\Users\<user>\..setingsorsuch..\.netbeans\6.7\config\Preferences.properties
-
-Set:
-phpcs.codingStandard=
-
-To the name of your Coding Standard, for example PHPCS, Zend or such.
+In the Advanced/Miscellaneous Tab of the Options Dialog you can chose which
+coding standard you want to use.
