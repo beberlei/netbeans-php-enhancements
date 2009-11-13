@@ -33,6 +33,7 @@ final class CodeSnifferPanel extends javax.swing.JPanel {
 
         org.openide.awt.Mnemonics.setLocalizedText(checkBoxShowWarnings, org.openide.util.NbBundle.getMessage(CodeSnifferPanel.class, "CodeSnifferPanel.checkBoxShowWarnings.text")); // NOI18N
 
+        inputBoxStandard.setEditable(true);
         inputBoxStandard.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Zend", "PEAR", "PHPCS", "Squiz", "MySource" }));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
