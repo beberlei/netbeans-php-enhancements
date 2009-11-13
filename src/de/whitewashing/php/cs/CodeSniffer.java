@@ -5,6 +5,7 @@
 package de.whitewashing.php.cs;
 
 import java.util.concurrent.ExecutionException;
+import java.util.prefs.BackingStoreException;
 import java.io.File;
 import java.util.concurrent.Future;
 import java.util.prefs.Preferences;
@@ -24,27 +25,18 @@ import org.openide.text.Line;
  *
  * @author benny
  */
-public class CodeSniffer
-{
+public class CodeSniffer {
+
     public static final String PARAM_STANDARD = "--standard=%s";
     public static final String PARAM_REPORT = "--report=xml";
-
     public CodeSnifferOutput output = null;
-
     protected String command = null;
 
     public CodeSniffer(String command) {
         this.command = command;
     }
 
-    private String getCodingStandard()
-    {
-        Preferences pref = NbPreferences.root();
-        return pref.get("phpcs.codingStandard", "Zend");
-    }
-
-    CodeSnifferXmlLogResult execute(FileObject fo)
-    {
+    CodeSnifferXmlLogResult execute(FileObject fo) {
         return execute(fo, false);
     }
 
@@ -55,14 +47,28 @@ public class CodeSniffer
             return CodeSnifferXmlLogResult.empty();
         }
 
-        ExternalProcessBuilder externalProcessBuilder = new ExternalProcessBuilder(this.command)
+        Preferences pref = NbPreferences.forModule(CodeSniffer.class);
+
+        String codingStandard = pref.get("phpcs.codingStandard", "Zend");
+
+        ExternalProcessBuilder externalProcessBuilder;
+
+        if (pref.getBoolean("phpcs.showWarnings", true)) {
+            externalProcessBuilder = new ExternalProcessBuilder(this.command)
                 .workingDirectory(parent)
-                .addArgument(String.format(PARAM_STANDARD, getCodingStandard()))
+                .addArgument(String.format(PARAM_STANDARD, codingStandard))
                 .addArgument(PARAM_REPORT)
                 .addArgument(fo.getNameExt());
+        } else {
+            externalProcessBuilder = new ExternalProcessBuilder(this.command)
+                .workingDirectory(parent)
+                .addArgument(String.format(PARAM_STANDARD, codingStandard))
+                .addArgument(PARAM_REPORT)
+                .addArgument("-n")
+                .addArgument(fo.getNameExt());
+        }
 
         this.output = new CodeSnifferOutput();
-
 
         ExecutionDescriptor descriptor = new ExecutionDescriptor()
                 .frontWindow(false)
@@ -91,26 +97,24 @@ public class CodeSniffer
         return rs;
     }
 
-    private void annotateWithCodingStandardHints(FileObject fo, CodeSnifferXmlLogResult rs)
-    {
+    private void annotateWithCodingStandardHints(FileObject fo, CodeSnifferXmlLogResult rs) {
         CodeSnifferFileListener l = new CodeSnifferFileListener();
         l.setLogResult(rs);
         fo.addFileChangeListener(l);
 
         try {
             DataObject d = DataObject.find(fo);
-            
-            LineCookie cookie = (LineCookie)d.getCookie(LineCookie.class);
+            LineCookie cookie = (LineCookie) d.getCookie(LineCookie.class);
 
             Line.Set lineSet = null;
             Line line = null;
-            for(int i = 0; i < rs.getCsErrors().size(); i++) {
+            for (int i = 0; i < rs.getCsErrors().size(); i++) {
                 lineSet = cookie.getLineSet();
                 line = lineSet.getOriginal(rs.getCsErrors().get(i).getLineNum());
                 rs.getCsErrors().get(i).attach(line);
             }
 
-            for(int i = 0; i < rs.getCsWarnings().size(); i++) {
+            for (int i = 0; i < rs.getCsWarnings().size(); i++) {
                 lineSet = cookie.getLineSet();
                 line = lineSet.getOriginal(rs.getCsWarnings().get(i).getLineNum());
                 rs.getCsWarnings().get(i).attach(line);

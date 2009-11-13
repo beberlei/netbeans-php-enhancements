@@ -31,7 +31,7 @@ public class CodeSnifferXmlLogParserTest {
         assertNotNull(result.getCsErrors());
         assertNotNull(result.getCsWarnings());
     }
-
+/*
     @Test
     public void testParse_Testresult1_ErrorCountIs13()
     {
@@ -53,4 +53,5 @@ public class CodeSnifferXmlLogParserTest {
 
         assertEquals(18, result.getCsWarnings().size());
     }
+    */
 }

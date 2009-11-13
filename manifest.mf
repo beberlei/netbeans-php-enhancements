@@ -3,4 +3,3 @@ OpenIDE-Module: de.whitewashing.php.cs
 OpenIDE-Module-Layer: de/whitewashing/php/cs/layer.xml
 OpenIDE-Module-Localizing-Bundle: de/whitewashing/php/cs/Bundle.properties
 OpenIDE-Module-Specification-Version: 1.0
-

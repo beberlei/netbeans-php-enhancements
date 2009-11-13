@@ -35,6 +35,18 @@
             </folder>
         </folder>
     </folder>
+    <folder name="OptionsDialog">
+        <folder name="Advanced">
+            <file name="de-whitewashing-php-cs-CodeSnifferAdvancedOption.instance">
+                <attr name="controller" newvalue="de.whitewashing.php.cs.CodeSnifferOptionsPanelController"/>
+                <attr name="displayName" bundlevalue="de.whitewashing.php.cs.Bundle#AdvancedOption_DisplayName_CodeSniffer"/>
+                <attr name="instanceCreate" methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory"/>
+                <attr name="keywords" bundlevalue="de.whitewashing.php.cs.Bundle#AdvancedOption_Keywords_CodeSniffer"/>
+                <attr name="keywordsCategory" stringvalue="Advanced/null"/>
+                <attr name="toolTip" bundlevalue="de.whitewashing.php.cs.Bundle#AdvancedOption_Tooltip_CodeSniffer"/>
+            </file>
+        </folder>
+    </folder>
     <folder name="TaskList">
         <folder name="Scanners">
             <file name="CodingStandardViolationsProvider.instance">
