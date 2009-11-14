@@ -48,12 +48,12 @@ public class ViolationsProvider extends PushTaskScanner {
 
             for(int i = 0; i < rs.getCsErrors().size(); i++) {
                 violations.add(
-                    Task.create(fo, "error", rs.getCsErrors().get(i).getShortDescription(), rs.getCsErrors().get(i).getLineNum())
+                    Task.create(fo, "error", rs.getCsErrors().get(i).getShortDescription(), rs.getCsErrors().get(i).getLineNum()+1)
                 );
             }
             for(int i = 0; i < rs.getCsWarnings().size(); i++) {
                 violations.add(
-                    Task.create(fo, "warning", rs.getCsWarnings().get(i).getShortDescription(), rs.getCsWarnings().get(i).getLineNum())
+                    Task.create(fo, "warning", rs.getCsWarnings().get(i).getShortDescription(), rs.getCsWarnings().get(i).getLineNum()+1)
                 );
             }
         }
