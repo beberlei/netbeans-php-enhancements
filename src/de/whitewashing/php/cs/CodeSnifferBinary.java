@@ -6,6 +6,7 @@
 package de.whitewashing.php.cs;
 
 import java.io.File;
+import java.io.FilePermission;
 
 /**
  *
@@ -13,7 +14,7 @@ import java.io.File;
  */
 public class CodeSnifferBinary {
 
-    public static final String BINARY = "phpcs";
+    public static final String BINARY = "phpcs";    //NOI18N
 
     private String fileName = null;
     
@@ -56,7 +57,7 @@ public class CodeSnifferBinary {
         String[] paths = env.split(File.pathSeparator);
         for (String path: paths) {
             File f = new File(path + File.separator + this.fileName);
-            if (!f.exists() || !f.canExecute()) {
+            if (!f.exists() || !checkExec(f.getAbsolutePath())) {
                 continue;
             }
 
@@ -65,4 +66,21 @@ public class CodeSnifferBinary {
         }
         return this.pathName;
     }
+
+    private boolean checkExec(String path) {
+        boolean value = true;
+        // Check the SecurityManager
+        SecurityManager sm = System.getSecurityManager();
+
+        if (sm != null) {
+            try {
+                sm.checkExec(path);
+            }
+            catch (SecurityException se) {
+                value = false;
+            }
+        }
+        return value;
+    }
+
 }

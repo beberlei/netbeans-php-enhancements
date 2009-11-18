@@ -57,7 +57,7 @@ public final class CodeSnifferOptionsPanelController extends OptionsPanelControl
 
     private CodeSnifferPanel getPanel() {
         if (panel == null) {
-            panel = new CodeSnifferPanel(this);
+            panel = new CodeSnifferPanel();
         }
         return panel;
     }
