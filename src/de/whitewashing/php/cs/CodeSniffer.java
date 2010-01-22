@@ -7,6 +7,11 @@ package de.whitewashing.php.cs;
 import java.util.concurrent.ExecutionException;
 import java.util.prefs.BackingStoreException;
 import java.io.File;
+import java.io.IOException;
+import java.io.Reader;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.concurrent.Future;
 import java.util.prefs.Preferences;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
@@ -29,11 +34,19 @@ public class CodeSniffer {
 
     public static final String PARAM_STANDARD = "--standard=%s";
     public static final String PARAM_REPORT = "--report=xml";
-    public CodeSnifferOutput output = null;
     protected String command = null;
 
     public CodeSniffer(String command) {
         this.command = command;
+    }
+
+    Iterator<String> listStandards() {
+        ExternalProcessBuilder procBuilder = new ExternalProcessBuilder(this.command)
+                .addArgument("-i");
+
+        ProcessExecutor executor = new ProcessExecutor();
+        StupidStandardsOutputParser parser = new StupidStandardsOutputParser();
+        return parser.parse(executor.execute(procBuilder));
     }
 
     CodeSnifferXmlLogResult execute(FileObject fo) {
@@ -67,29 +80,9 @@ public class CodeSniffer {
                 .addArgument("-n")
                 .addArgument(fo.getNameExt());
         }
-
-        this.output = new CodeSnifferOutput();
-
-        ExecutionDescriptor descriptor = new ExecutionDescriptor()
-                .frontWindow(false)
-                .controllable(false)
-                .outProcessorFactory(this.output);
-
-        ExecutionService service = ExecutionService.newService(externalProcessBuilder,
-                descriptor, "PHP Coding Standards");
-
-
-        Future<Integer> task = service.run();
-        try {
-            task.get();
-        } catch (InterruptedException ex) {
-            Exceptions.printStackTrace(ex);
-        } catch (ExecutionException ex) {
-            Exceptions.printStackTrace(ex);
-        }
-
+        
         CodeSnifferXmlLogParser parser = new CodeSnifferXmlLogParser();
-        CodeSnifferXmlLogResult rs = parser.parse(this.output.getReader());
+        CodeSnifferXmlLogResult rs = parser.parse(new ProcessExecutor().execute(externalProcessBuilder));
 
         if(annotateLines) {
             annotateWithCodingStandardHints(fo, rs);
@@ -121,6 +114,92 @@ public class CodeSniffer {
             }
         } catch (DataObjectNotFoundException ex) {
             Exceptions.printStackTrace(ex);
+        }
+    }
+
+    /**
+     * Small utility class that is used to execute an external CodeSniffer process.
+     */
+    class ProcessExecutor {
+
+        /**
+         * Executes the given process and returns a reader instance with the
+         * STDOUT result of the process.
+         *
+         * @param builder A configured process builder instance.
+         *
+         * @return Reader
+         */
+        public Reader execute(ExternalProcessBuilder builder) {
+            CodeSnifferOutput output = new CodeSnifferOutput();
+
+            ExecutionDescriptor descriptor = new ExecutionDescriptor()
+                    .frontWindow(false)
+                    .controllable(false)
+                    .outProcessorFactory(output);
+
+            ExecutionService service = ExecutionService.newService(builder, descriptor, "PHP Coding Standards");
+            Future<Integer> task = service.run();
+            try {
+                task.get();
+            } catch (InterruptedException ex) {
+                Exceptions.printStackTrace(ex);
+            } catch (ExecutionException ex) {
+                Exceptions.printStackTrace(ex);
+            }
+
+            return output.getReader();
+        }
+    }
+
+    /**
+     * Utility class that parses the textual output of the CodeSniffer -i option
+     * and creates a list of available coding standards.
+     */
+    class StupidStandardsOutputParser {
+
+        private final String DEFAULT_STANDARDS = "Zend, PEAR, PHPCS, Squiz and MySource";
+
+        private Iterator<String> parse(Reader reader) {
+            String output = this.getStringFromReader(reader);
+            
+            Set<String> standards = new HashSet<String>();
+
+            String[] parts = output.split(" and ");
+            standards.add(parts[1].trim());
+
+            parts = parts[0].split(",");
+            for (int i = 1; i < parts.length; ++i) {
+                standards.add(parts[i].trim());
+            }
+
+            parts = parts[0].split(" ");
+            standards.add(parts[parts.length - 1].trim());
+
+            System.out.println(standards);
+            return standards.iterator();
+        }
+
+        /**
+         * Creates a simple string from the given input reader. This method will
+         * return a default set of CodeSniffer standards when an IOException
+         * occures during the parsing process.
+         *
+         * @param reader The raw input stream with codesniffer data.
+         *
+         * @return String
+         */
+        private String getStringFromReader(Reader reader) {
+            try {
+                char[] chars = new char[1024];
+                reader.read(chars);
+                StringBuilder sb = new StringBuilder();
+                sb.append(chars);
+
+                return sb.toString();
+            } catch (IOException e) {
+                return this.DEFAULT_STANDARDS;
+            }
         }
     }
 }

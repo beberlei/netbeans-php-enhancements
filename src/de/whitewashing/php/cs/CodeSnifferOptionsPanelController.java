@@ -57,7 +57,12 @@ public final class CodeSnifferOptionsPanelController extends OptionsPanelControl
 
     private CodeSnifferPanel getPanel() {
         if (panel == null) {
-            panel = new CodeSnifferPanel();
+            CodeSnifferBinary bin = new CodeSnifferBinary();
+
+            CodeSniffer sniffer = new CodeSniffer(bin.getPath());
+            sniffer.listStandards();
+            
+            panel = new CodeSnifferPanel(sniffer.listStandards());
         }
         return panel;
     }

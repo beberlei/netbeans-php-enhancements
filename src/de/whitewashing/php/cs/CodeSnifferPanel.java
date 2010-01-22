@@ -10,6 +10,7 @@
  */
 package de.whitewashing.php.cs;
 
+import java.util.Iterator;
 import org.openide.util.NbPreferences;
 
 /**
@@ -18,9 +19,13 @@ import org.openide.util.NbPreferences;
  */
 public class CodeSnifferPanel extends javax.swing.JPanel {
 
+    private Iterator<String> standards;
+
     /** Creates new form CodeSnifferPanel2 */
-    public CodeSnifferPanel() {
+    public CodeSnifferPanel(Iterator<String> standards) {
         initComponents();
+
+        this.standards = standards;
     }
 
     /** This method is called from within the constructor to
@@ -69,6 +74,10 @@ public class CodeSnifferPanel extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     void load() {
+        inputBoxStandard.removeAllItems();
+        while (this.standards.hasNext()) {
+            inputBoxStandard.addItem(this.standards.next());
+        }
         inputBoxStandard.setSelectedItem(
                 NbPreferences.forModule(CodeSniffer.class).get("phpcs.codingStandard", "Zend"));
 
