@@ -112,18 +112,16 @@ public class CodeSnifferBinary {
     }
 
     private boolean checkExec(String path) {
-        boolean value = true;
         // Check the SecurityManager
         SecurityManager sm = System.getSecurityManager();
-
         if (sm != null) {
             try {
                 sm.checkExec(path);
             } catch (SecurityException se) {
-                value = false;
+                return false;
             }
         }
-        return value;
+        return true;
     }
 
 }
