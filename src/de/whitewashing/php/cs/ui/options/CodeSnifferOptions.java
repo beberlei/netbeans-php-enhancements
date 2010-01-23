@@ -5,10 +5,11 @@
 
 package de.whitewashing.php.cs.ui.options;
 
-import de.whitewashing.php.cs.CodeSniffer;
-import de.whitewashing.php.cs.CodeSniffer;
-import de.whitewashing.php.cs.CodeSnifferBinary;
-import de.whitewashing.php.cs.CodeSnifferBinary;
+import de.whitewashing.php.cs.command.CodeSniffer;
+import de.whitewashing.php.cs.command.CodeSniffer;
+import de.whitewashing.php.cs.command.CodeSnifferBinary;
+import de.whitewashing.php.cs.command.CodeSnifferBinary;
+import java.util.ArrayList;
 import java.util.List;
 import org.openide.util.NbPreferences;
 
@@ -27,6 +28,10 @@ public class CodeSnifferOptions {
     public static final boolean DEFAULT_SHOW_WARNINGS = true;
 
     private List<String> codingStandards;
+
+    public CodeSnifferOptions() {
+        this(new ArrayList<String>());
+    }
 
     public CodeSnifferOptions(List<String> codingStandards) {
         this.codingStandards = codingStandards;

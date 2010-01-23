@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.command;
 
 import java.util.concurrent.ExecutionException;
 import java.io.File;
@@ -41,12 +41,12 @@ public class CodeSniffer {
         this.showWarnings = showWarnings;
     }
 
-    boolean exists() {
+    public boolean isEnabled() {
         return new File(this.shellScript).exists();
     }
 
     public List<String> getAvailableStandards() {
-        if (this.exists() == false) {
+        if (this.isEnabled() == false) {
             return new ArrayList<String>();
         }
         
@@ -58,14 +58,14 @@ public class CodeSniffer {
         return parser.parse(executor.execute(procBuilder));
     }
 
-    CodeSnifferXmlLogResult execute(FileObject fo) {
+    public CodeSnifferXmlLogResult execute(FileObject fo) {
         return execute(fo, false);
     }
 
-    CodeSnifferXmlLogResult execute(FileObject fo, boolean annotateLines) {
+    public CodeSnifferXmlLogResult execute(FileObject fo, boolean annotateLines) {
         final File parent = FileUtil.toFile(fo.getParent());
 
-        if(parent == null || this.exists() == false) {
+        if(parent == null || this.isEnabled() == false) {
             return CodeSnifferXmlLogResult.empty();
         }
 

@@ -4,6 +4,8 @@
  */
 package de.whitewashing.php.cs;
 
+import de.whitewashing.php.cs.command.CodeSnifferBuilder;
+import de.whitewashing.php.cs.command.CodeSniffer;
 import javax.swing.JMenuItem;
 import org.openide.cookies.EditorCookie;
 import org.openide.nodes.Node;
@@ -93,7 +95,7 @@ public final class CodeSnifferAction extends CookieAction {
 
     protected JMenuItem setEnabledForExistingBinary(JMenuItem item)
     {
-        item.setEnabled(this.codeSniffer.exists());
+        item.setEnabled(this.codeSniffer.isEnabled());
         return item;
     }
 }

@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.command;
 
+import de.whitewashing.php.cs.CodingStandardError;
+import de.whitewashing.php.cs.CodingStandardWarning;
 import org.openide.filesystems.FileAttributeEvent;
 import org.openide.filesystems.FileChangeListener;
 

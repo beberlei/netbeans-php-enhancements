@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.command;
 
+import de.whitewashing.php.cs.CodingStandardError;
+import de.whitewashing.php.cs.CodingStandardWarning;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +14,7 @@ import java.util.List;
  *
  * @author benny
  */
-class CodeSnifferXmlLogResult {
+public class CodeSnifferXmlLogResult {
 
     static public CodeSnifferXmlLogResult empty()
     {

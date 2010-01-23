@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.command;
 
 import de.whitewashing.php.cs.ui.options.CodeSnifferOptions;
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class CodeSnifferBuilder {
     }
 
     public static CodeSniffer create() {
-        CodeSnifferOptions options = new CodeSnifferOptions(new ArrayList<String>());
+        CodeSnifferOptions options = new CodeSnifferOptions();
 
         return (codeSniffer = new CodeSniffer(options.getShellScript(), options.getCodingStandard(), options.hasShowWarnings()));
     }

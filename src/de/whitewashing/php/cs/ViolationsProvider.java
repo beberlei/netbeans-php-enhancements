@@ -5,6 +5,8 @@
 
 package de.whitewashing.php.cs;
 
+import de.whitewashing.php.cs.command.CodeSnifferXmlLogResult;
+import de.whitewashing.php.cs.command.CodeSnifferBuilder;
 import java.util.List;
 import java.util.ArrayList;
 import org.netbeans.spi.tasklist.PushTaskScanner;

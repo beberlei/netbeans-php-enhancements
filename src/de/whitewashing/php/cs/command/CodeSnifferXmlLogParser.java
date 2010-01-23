@@ -3,8 +3,10 @@
  * and open the template in the editor.
  */
 
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.command;
 
+import de.whitewashing.php.cs.CodingStandardError;
+import de.whitewashing.php.cs.CodingStandardWarning;
 import java.io.IOException;
 import java.io.Reader;
 import java.io.File;
@@ -23,7 +25,7 @@ import javax.xml.parsers.*;
  *
  * @author benny
  */
-class CodeSnifferXmlLogParser {
+public class CodeSnifferXmlLogParser {
 
     CodeSnifferXmlLogResult parse(File fo)
     {
