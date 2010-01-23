@@ -38,7 +38,7 @@ public class CodeSnifferBinary {
         this.fileName = fileName;
     }
 
-    protected String getPath()
+    public String getPath()
     {
         return this.findBinary();
     }
@@ -119,8 +119,7 @@ public class CodeSnifferBinary {
         if (sm != null) {
             try {
                 sm.checkExec(path);
-            }
-            catch (SecurityException se) {
+            } catch (SecurityException se) {
                 value = false;
             }
         }

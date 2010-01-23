@@ -8,7 +8,7 @@
  *
  * Created on Nov 17, 2009, 1:45:25 PM
  */
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.ui.options;
 
 import java.io.File;
 import org.openide.filesystems.FileChooserBuilder;
@@ -104,7 +104,7 @@ public class CodeSnifferOptionsPanel extends javax.swing.JPanel {
                     .add(labelStandard))
                 .add(18, 18, 18)
                 .add(checkBoxShowWarnings)
-                .addContainerGap(204, Short.MAX_VALUE))
+                .addContainerGap(208, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferPanel.AccessibleContext.accessibleDescription")); // NOI18N

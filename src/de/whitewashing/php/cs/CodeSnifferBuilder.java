@@ -5,6 +5,7 @@
 
 package de.whitewashing.php.cs;
 
+import de.whitewashing.php.cs.ui.options.CodeSnifferOptions;
 import java.util.ArrayList;
 
 /**

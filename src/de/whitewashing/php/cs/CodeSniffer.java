@@ -45,7 +45,7 @@ public class CodeSniffer {
         return new File(this.shellScript).exists();
     }
 
-    List<String> getAvailableStandards() {
+    public List<String> getAvailableStandards() {
         if (this.exists() == false) {
             return new ArrayList<String>();
         }

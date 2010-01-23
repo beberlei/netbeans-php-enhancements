@@ -3,8 +3,12 @@
  * and open the template in the editor.
  */
 
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.ui.options;
 
+import de.whitewashing.php.cs.CodeSniffer;
+import de.whitewashing.php.cs.CodeSniffer;
+import de.whitewashing.php.cs.CodeSnifferBinary;
+import de.whitewashing.php.cs.CodeSnifferBinary;
 import java.util.List;
 import org.openide.util.NbPreferences;
 

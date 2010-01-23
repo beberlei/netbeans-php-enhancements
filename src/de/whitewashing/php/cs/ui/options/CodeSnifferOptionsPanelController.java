@@ -2,8 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.ui.options;
 
+import de.whitewashing.php.cs.CodeSniffer;
+import de.whitewashing.php.cs.CodeSniffer;
+import de.whitewashing.php.cs.CodeSnifferBuilder;
+import de.whitewashing.php.cs.CodeSnifferBuilder;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
 import javax.swing.JComponent;

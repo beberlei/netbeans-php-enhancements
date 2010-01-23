@@ -39,7 +39,7 @@
         <folder name="org-netbeans-modules-php-project-ui-options-PHPOptionsCategory">
             <file name="CodeSniffer.instance">
                 <attr methodvalue="org.netbeans.spi.options.AdvancedOption.createSubCategory" name="instanceCreate"/>
-                <attr name="controller" newvalue="de.whitewashing.php.cs.CodeSnifferOptionsPanelController"/>
+                <attr name="controller" newvalue="de.whitewashing.php.cs.ui.options.CodeSnifferOptionsPanelController"/>
                 <attr bundlevalue="de.whitewashing.php.cs.Bundle#AdvancedOption_DisplayName_CodeSniffer" name="displayName"/>
                 <attr intvalue="250" name="position"/>
             </file>
