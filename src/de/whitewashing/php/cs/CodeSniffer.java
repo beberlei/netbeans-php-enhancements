@@ -5,15 +5,12 @@
 package de.whitewashing.php.cs;
 
 import java.util.concurrent.ExecutionException;
-import java.util.prefs.BackingStoreException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.Future;
-import java.util.prefs.Preferences;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
@@ -22,7 +19,6 @@ import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
 import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
-import org.openide.util.NbPreferences;
 import org.openide.loaders.DataObject;
 import org.openide.text.Line;
 
@@ -34,14 +30,27 @@ public class CodeSniffer {
 
     public static final String PARAM_STANDARD = "--standard=%s";
     public static final String PARAM_REPORT = "--report=xml";
-    protected String command = null;
 
-    public CodeSniffer(String command) {
-        this.command = command;
+    private String shellScript;
+    private String codingStandard;
+    private boolean showWarnings;
+
+    public CodeSniffer(String shellScript, String codingStandard, boolean showWarnings) {
+        this.shellScript = shellScript;
+        this.codingStandard = codingStandard;
+        this.showWarnings = showWarnings;
     }
 
-    Iterator<String> listStandards() {
-        ExternalProcessBuilder procBuilder = new ExternalProcessBuilder(this.command)
+    boolean exists() {
+        return new File(this.shellScript).exists();
+    }
+
+    List<String> getAvailableStandards() {
+        if (this.exists() == false) {
+            return new ArrayList<String>();
+        }
+        
+        ExternalProcessBuilder procBuilder = new ExternalProcessBuilder(this.shellScript)
                 .addArgument("-i");
 
         ProcessExecutor executor = new ProcessExecutor();
@@ -56,26 +65,22 @@ public class CodeSniffer {
     CodeSnifferXmlLogResult execute(FileObject fo, boolean annotateLines) {
         final File parent = FileUtil.toFile(fo.getParent());
 
-        if(parent == null) {
+        if(parent == null || this.exists() == false) {
             return CodeSnifferXmlLogResult.empty();
         }
 
-        Preferences pref = NbPreferences.forModule(CodeSniffer.class);
-
-        String codingStandard = pref.get("phpcs.codingStandard", "Zend");
-
         ExternalProcessBuilder externalProcessBuilder;
 
-        if (pref.getBoolean("phpcs.showWarnings", true)) {
-            externalProcessBuilder = new ExternalProcessBuilder(this.command)
+        if (this.showWarnings) {
+            externalProcessBuilder = new ExternalProcessBuilder(this.shellScript)
                 .workingDirectory(parent)
-                .addArgument(String.format(PARAM_STANDARD, codingStandard))
+                .addArgument(String.format(PARAM_STANDARD, this.codingStandard))
                 .addArgument(PARAM_REPORT)
                 .addArgument(fo.getNameExt());
         } else {
-            externalProcessBuilder = new ExternalProcessBuilder(this.command)
+            externalProcessBuilder = new ExternalProcessBuilder(this.shellScript)
                 .workingDirectory(parent)
-                .addArgument(String.format(PARAM_STANDARD, codingStandard))
+                .addArgument(String.format(PARAM_STANDARD, this.codingStandard))
                 .addArgument(PARAM_REPORT)
                 .addArgument("-n")
                 .addArgument(fo.getNameExt());
@@ -160,10 +165,10 @@ public class CodeSniffer {
 
         private final String DEFAULT_STANDARDS = "Zend, PEAR, PHPCS, Squiz and MySource";
 
-        private Iterator<String> parse(Reader reader) {
+        private List<String> parse(Reader reader) {
             String output = this.getStringFromReader(reader);
             
-            Set<String> standards = new HashSet<String>();
+            List<String> standards = new ArrayList<String>();
 
             String[] parts = output.split(" and ");
             standards.add(parts[1].trim());
@@ -176,8 +181,7 @@ public class CodeSniffer {
             parts = parts[0].split(" ");
             standards.add(parts[parts.length - 1].trim());
 
-            System.out.println(standards);
-            return standards.iterator();
+            return standards;
         }
 
         /**

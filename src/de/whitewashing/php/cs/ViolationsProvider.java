@@ -18,22 +18,9 @@ import org.openide.filesystems.FileObject;
  */
 public class ViolationsProvider extends PushTaskScanner {
 
-    private CodeSnifferBinary codeSnifferBinary = null;
-    private CodeSniffer cs = null;
-
     public ViolationsProvider()
     {
         super("PHP Coding Standards", "Check PHP Coding Standards", null);
-
-        codeSnifferBinary = new CodeSnifferBinary();
-    }
-
-    private CodeSniffer getCodeSniffer()
-    {
-        if(cs == null) {
-            cs = new CodeSniffer(this.codeSnifferBinary.getPath());
-        }
-        return cs;
     }
 
     public List<? extends Task> scan(FileObject fo) {
@@ -43,19 +30,17 @@ public class ViolationsProvider extends PushTaskScanner {
             return violations;
         }
 
-        if(codeSnifferBinary.exists() == true) {
-            CodeSnifferXmlLogResult rs = getCodeSniffer().execute(fo);
+        CodeSnifferXmlLogResult rs = CodeSnifferBuilder.create().execute(fo);
 
-            for(int i = 0; i < rs.getCsErrors().size(); i++) {
-                violations.add(
-                    Task.create(fo, "error", rs.getCsErrors().get(i).getShortDescription(), rs.getCsErrors().get(i).getLineNum()+1)
-                );
-            }
-            for(int i = 0; i < rs.getCsWarnings().size(); i++) {
-                violations.add(
-                    Task.create(fo, "warning", rs.getCsWarnings().get(i).getShortDescription(), rs.getCsWarnings().get(i).getLineNum()+1)
-                );
-            }
+        for(int i = 0; i < rs.getCsErrors().size(); i++) {
+            violations.add(
+                Task.create(fo, "error", rs.getCsErrors().get(i).getShortDescription(), rs.getCsErrors().get(i).getLineNum()+1)
+            );
+        }
+        for(int i = 0; i < rs.getCsWarnings().size(); i++) {
+            violations.add(
+                Task.create(fo, "warning", rs.getCsWarnings().get(i).getShortDescription(), rs.getCsWarnings().get(i).getLineNum()+1)
+            );
         }
 
         return violations;

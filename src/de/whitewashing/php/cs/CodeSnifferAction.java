@@ -15,21 +15,15 @@ import org.openide.filesystems.FileObject;
 
 public final class CodeSnifferAction extends CookieAction {
 
-    private CodeSnifferBinary binary = null;
+    private CodeSniffer codeSniffer = CodeSnifferBuilder.createOrReturn();
 
     protected void performAction(Node[] activatedNodes) {
         if(activatedNodes.length != 1) {
             return;
         }
 
-        if (this.binary.exists() == false) {
-            return;
-        }
-
         FileObject fo = getFileObject(activatedNodes[0]);
-
-        CodeSniffer cs = new CodeSniffer(this.binary.getPath());
-        cs.execute(fo, true);
+        this.codeSniffer.execute(fo, true);
     }
 
     /**
@@ -74,8 +68,6 @@ public final class CodeSnifferAction extends CookieAction {
         super.initialize();
         // see org.openide.util.actions.SystemAction.iconResource() Javadoc for more details
         putValue("noIconInMenu", Boolean.TRUE);
-
-        this.binary = new CodeSnifferBinary();
     }
 
     @Override
@@ -101,7 +93,7 @@ public final class CodeSnifferAction extends CookieAction {
 
     protected JMenuItem setEnabledForExistingBinary(JMenuItem item)
     {
-        item.setEnabled(this.binary.exists());
+        item.setEnabled(this.codeSniffer.exists());
         return item;
     }
 }

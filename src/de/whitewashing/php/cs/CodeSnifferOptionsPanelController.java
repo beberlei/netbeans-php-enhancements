@@ -13,7 +13,7 @@ import org.openide.util.Lookup;
 
 public final class CodeSnifferOptionsPanelController extends OptionsPanelController {
 
-    private CodeSnifferPanel panel;
+    private CodeSnifferOptionsPanel panel;
     private final PropertyChangeSupport pcs = new PropertyChangeSupport(this);
     private boolean changed;
 
@@ -25,6 +25,9 @@ public final class CodeSnifferOptionsPanelController extends OptionsPanelControl
     public void applyChanges() {
         getPanel().store();
         changed = false;
+
+        // Reset currently used CodeSniffer instance
+        CodeSnifferBuilder.create();
     }
 
     public void cancel() {
@@ -55,14 +58,12 @@ public final class CodeSnifferOptionsPanelController extends OptionsPanelControl
         pcs.removePropertyChangeListener(l);
     }
 
-    private CodeSnifferPanel getPanel() {
+    private CodeSnifferOptionsPanel getPanel() {
         if (panel == null) {
-            CodeSnifferBinary bin = new CodeSnifferBinary();
-
-            CodeSniffer sniffer = new CodeSniffer(bin.getPath());
-            sniffer.listStandards();
+            CodeSniffer command = CodeSnifferBuilder.createOrReturn();
+            CodeSnifferOptions options = new CodeSnifferOptions(command.getAvailableStandards());
             
-            panel = new CodeSnifferPanel(sniffer.listStandards());
+            panel = new CodeSnifferOptionsPanel(options);
         }
         return panel;
     }
