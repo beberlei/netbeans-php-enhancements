@@ -16,7 +16,6 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.openide.util.Exceptions;
 import org.w3c.dom.*;
 import org.xml.sax.*;
 import javax.xml.parsers.*;

@@ -25,9 +25,9 @@ public class CodeSnifferXmlLogParserTest {
      */
     @Test
     public void testParse_AlwaysReturnsValidParseResult() {
-        File f = null;
+        File file = null;
         CodeSnifferXmlLogParser instance = new CodeSnifferXmlLogParser();
-        CodeSnifferXmlLogResult result = instance.parse(f);
+        CodeSnifferXmlLogResult result = instance.parse(file);
 
         assertNotNull(result);
         assertNotNull(result.getCsErrors());
