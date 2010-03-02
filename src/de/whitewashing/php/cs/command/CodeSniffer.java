@@ -42,7 +42,7 @@ public class CodeSniffer {
     }
 
     public boolean isEnabled() {
-        return new File(this.shellScript).exists();
+        return this.shellScript !=null && new File(this.shellScript).exists();
     }
 
     public List<String> getAvailableStandards() {
@@ -102,7 +102,7 @@ public class CodeSniffer {
 
         try {
             DataObject d = DataObject.find(fo);
-            LineCookie cookie = (LineCookie) d.getCookie(LineCookie.class);
+            LineCookie cookie = d.getCookie(LineCookie.class);
 
             Line.Set lineSet = null;
             Line line = null;

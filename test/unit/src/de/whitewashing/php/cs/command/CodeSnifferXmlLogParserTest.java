@@ -3,7 +3,7 @@
  * and open the template in the editor.
  */
 
-package de.whitewashing.php.cs;
+package de.whitewashing.php.cs.command;
 
 import de.whitewashing.php.cs.command.CodeSnifferXmlLogResult;
 import de.whitewashing.php.cs.command.CodeSnifferXmlLogParser;

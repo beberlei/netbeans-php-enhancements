@@ -5,8 +5,6 @@
 package de.whitewashing.php.cs.ui.options;
 
 import de.whitewashing.php.cs.command.CodeSniffer;
-import de.whitewashing.php.cs.command.CodeSniffer;
-import de.whitewashing.php.cs.command.CodeSnifferBuilder;
 import de.whitewashing.php.cs.command.CodeSnifferBuilder;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
