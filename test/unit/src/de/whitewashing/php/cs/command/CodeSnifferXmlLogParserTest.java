@@ -5,8 +5,6 @@
 
 package de.whitewashing.php.cs.command;
 
-import de.whitewashing.php.cs.command.CodeSnifferXmlLogResult;
-import de.whitewashing.php.cs.command.CodeSnifferXmlLogParser;
 import java.io.File;
 import org.junit.Test;
 import static org.junit.Assert.*;

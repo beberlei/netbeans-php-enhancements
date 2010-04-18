@@ -35,4 +35,25 @@ CONFIGURE CODING-STANDARD
 =========================
 
 In the Advanced/Miscellaneous Tab of the Options Dialog you can chose which
-coding standard you want to use.
+coding standard you want to use and where the PHPCS binary (script) is located.
+
+TODOS
+=====
+
+* Add project level Coding Standard Configuration
+
+EXTENDING THIS PLUGIN
+=====================
+
+If you git clone this project you have to modify the nbproject/private/platform-private.properties
+file and fill it with the following two properties:
+
+    user.properties.file=/home/benny/.netbeans/6.8/build.properties
+    nbplatform.default.harness.dir=/home/benny/programs/netbeans-6.8/harness
+
+THANK YOU NOTES
+===============
+
+We thank the following individuals for contributing code and knowledge to this project:
+
+Petr Pisl, tprochazka, Alexandre Haguiar

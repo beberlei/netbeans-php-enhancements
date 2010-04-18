@@ -1,5 +1,5 @@
 Manifest-Version: 1.0
-OpenIDE-Module: de.whitewashing.php.cs
+OpenIDE-Module: de.whitewashing.php.cs/0
+OpenIDE-Module-Implementation-Version: 1
 OpenIDE-Module-Layer: de/whitewashing/php/cs/layer.xml
 OpenIDE-Module-Localizing-Bundle: de/whitewashing/php/cs/Bundle.properties
-OpenIDE-Module-Specification-Version: 1.1
