@@ -235,7 +235,6 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
         // Gets PHPCS version, if "?" then, valid PHPCS were not found
         if(command.getVersion().equals("?")) {
             isValid = false;
-            
             statusTextLabel.setText("Invalid CodeSniffer script");
         } else {
             // Gets available standards
