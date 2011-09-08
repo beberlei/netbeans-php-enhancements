@@ -11,6 +11,8 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
@@ -21,6 +23,7 @@ import org.openide.loaders.DataObjectNotFoundException;
 import org.openide.util.Exceptions;
 import org.openide.loaders.DataObject;
 import org.openide.text.Line;
+import sun.misc.Regexp;
 
 /**
  *
@@ -35,6 +38,11 @@ public class CodeSniffer {
     private String codingStandard;
     private boolean showWarnings;
 
+    public void setShellScript(String shellScript) {
+        this.shellScript = shellScript;
+    }
+    
+
     public CodeSniffer(String shellScript, String codingStandard, boolean showWarnings) {
         this.shellScript = shellScript;
         this.codingStandard = codingStandard;
@@ -42,7 +50,35 @@ public class CodeSniffer {
     }
 
     public boolean isEnabled() {
-        return this.shellScript !=null && new File(this.shellScript).exists();
+        if(this.shellScript == null || this.shellScript.equals("")) {
+            return false;
+        } else {
+            File shellFile = new File(this.shellScript);
+            return shellFile.isFile() && shellFile.canExecute();
+        }
+    }
+    
+    public String getVersion() {
+        if(!isEnabled()) {
+            return "?";
+        }
+        
+        ExternalProcessBuilder procBuilder = new ExternalProcessBuilder(this.shellScript)
+                .addArgument("--version");
+
+        try {
+            ProcessExecutor executor = new ProcessExecutor();
+            String versionLine = this.getStringFromReader(executor.execute(procBuilder));
+            Pattern pattern = Pattern.compile("(?:CodeSniffer.*?)(?:v\\.?(?:ersion)?\\s+)([0-9]+\\.[0-9]+(?:\\.[0-9]+)?)", Pattern.CASE_INSENSITIVE);
+            Matcher m = pattern.matcher(versionLine);
+            if(!m.find()) {
+                return "?";
+            }
+            
+            return m.group(1);
+        } catch(IOException e) {
+            return "?";
+        }
     }
 
     public List<String> getAvailableStandards() {
@@ -121,6 +157,25 @@ public class CodeSniffer {
             Exceptions.printStackTrace(ex);
         }
     }
+    
+    /**
+     * Creates a simple string from the given input reader. 
+     * This method will not handle exceptions.
+     *
+     * @param reader The raw input stream.
+     *
+     * @return String
+     */
+    private String getStringFromReader(Reader reader)
+        throws IOException
+    {
+        char[] chars = new char[1024];
+        reader.read(chars);
+        StringBuilder sb = new StringBuilder();
+        sb.append(chars);
+
+        return sb.toString();
+    }
 
     /**
      * Small utility class that is used to execute an external CodeSniffer process.
@@ -195,12 +250,7 @@ public class CodeSniffer {
          */
         private String getStringFromReader(Reader reader) {
             try {
-                char[] chars = new char[1024];
-                reader.read(chars);
-                StringBuilder sb = new StringBuilder();
-                sb.append(chars);
-
-                return sb.toString();
+                return CodeSniffer.this.getStringFromReader(reader);
             } catch (IOException e) {
                 return this.DEFAULT_STANDARDS;
             }

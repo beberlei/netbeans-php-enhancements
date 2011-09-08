@@ -10,7 +10,11 @@
  */
 package de.whitewashing.php.cs.ui.options;
 
+import de.whitewashing.php.cs.command.CodeSniffer;
+import de.whitewashing.php.cs.command.CodeSnifferBuilder;
+import java.awt.Color;
 import java.io.File;
+import java.util.List;
 import org.openide.filesystems.FileChooserBuilder;
 import org.openide.filesystems.FileUtil;
 import org.openide.util.NbBundle;
@@ -26,11 +30,10 @@ public class CodeSnifferOptionsPanel extends javax.swing.JPanel {
      */
     private static final String CODE_SNIFFER_LAST_FOLDER_SUFFIX = ".codeSniffer";
 
+    private CodeSniffer command = null;
     private CodeSnifferOptions options = null;
 
-    public CodeSnifferOptionsPanel(CodeSnifferOptions options) {
-        this.options = options;
-        
+    public CodeSnifferOptionsPanel() {
         initComponents();
     }
 
@@ -49,6 +52,11 @@ public class CodeSnifferOptionsPanel extends javax.swing.JPanel {
         codeSnifferLabel = new javax.swing.JLabel();
         codeSnifferTextField = new javax.swing.JTextField();
         browseButton = new javax.swing.JButton();
+        refreshButton = new javax.swing.JButton();
+        statusTextLabel = new javax.swing.JLabel();
+        statusLabel = new javax.swing.JLabel();
+        versionLabel = new javax.swing.JLabel();
+        versionTextLabel = new javax.swing.JLabel();
 
         setNextFocusableComponent(this);
         setPreferredSize(new java.awt.Dimension(612, 322));
@@ -70,24 +78,60 @@ public class CodeSnifferOptionsPanel extends javax.swing.JPanel {
             }
         });
 
+        refreshButton.setText(org.openide.util.NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferOptionsPanel.refreshButton.text")); // NOI18N
+        refreshButton.setToolTipText(org.openide.util.NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferOptionsPanel.refreshButton.toolTipText")); // NOI18N
+        refreshButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                refreshButtonActionPerformed(evt);
+            }
+        });
+
+        statusTextLabel.setText(org.openide.util.NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferOptionsPanel.statusTextLabel.text")); // NOI18N
+
+        statusLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        statusLabel.setText(org.openide.util.NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferOptionsPanel.statusLabel.text")); // NOI18N
+
+        versionLabel.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        versionLabel.setText(org.openide.util.NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferOptionsPanel.versionLabel.text")); // NOI18N
+
+        versionTextLabel.setText(org.openide.util.NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferOptionsPanel.versionTextLabel.text")); // NOI18N
+
         org.jdesktop.layout.GroupLayout layout = new org.jdesktop.layout.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
             .add(layout.createSequentialGroup()
-                .addContainerGap()
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING)
-                    .add(codeSnifferLabel)
-                    .add(labelStandard))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
-                    .add(checkBoxShowWarnings, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
                     .add(layout.createSequentialGroup()
-                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, inputBoxStandard, 0, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .add(org.jdesktop.layout.GroupLayout.LEADING, codeSnifferTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 365, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))
+                        .add(65, 65, 65)
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(layout.createSequentialGroup()
+                                .add(74, 74, 74)
+                                .add(checkBoxShowWarnings, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 506, Short.MAX_VALUE))
+                            .add(layout.createSequentialGroup()
+                                .add(labelStandard)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(inputBoxStandard, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 350, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE))))
+                    .add(org.jdesktop.layout.GroupLayout.LEADING, layout.createSequentialGroup()
+                        .addContainerGap()
+                        .add(codeSnifferLabel)
                         .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
-                        .add(browseButton)))
+                        .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING)
+                            .add(layout.createSequentialGroup()
+                                .add(codeSnifferTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, 347, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(browseButton)
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(refreshButton))
+                            .add(layout.createSequentialGroup()
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.TRAILING, false)
+                                    .add(statusLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .add(versionLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.LEADING, false)
+                                    .add(versionTextLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .add(statusTextLabel, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, 261, Short.MAX_VALUE))))
+                        .add(18, 18, 18)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -97,14 +141,23 @@ public class CodeSnifferOptionsPanel extends javax.swing.JPanel {
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(codeSnifferLabel)
                     .add(codeSnifferTextField, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
-                    .add(browseButton))
-                .addPreferredGap(org.jdesktop.layout.LayoutStyle.UNRELATED)
+                    .add(browseButton)
+                    .add(refreshButton))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(statusLabel)
+                    .add(statusTextLabel))
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
+                .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
+                    .add(versionLabel)
+                    .add(versionTextLabel))
+                .add(18, 18, 18)
                 .add(layout.createParallelGroup(org.jdesktop.layout.GroupLayout.BASELINE)
                     .add(inputBoxStandard, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE, org.jdesktop.layout.GroupLayout.DEFAULT_SIZE, org.jdesktop.layout.GroupLayout.PREFERRED_SIZE)
                     .add(labelStandard))
-                .add(18, 18, 18)
+                .addPreferredGap(org.jdesktop.layout.LayoutStyle.RELATED)
                 .add(checkBoxShowWarnings)
-                .addContainerGap(208, Short.MAX_VALUE))
+                .addContainerGap(168, Short.MAX_VALUE))
         );
 
         getAccessibleContext().setAccessibleDescription(org.openide.util.NbBundle.getMessage(CodeSnifferOptionsPanel.class, "CodeSnifferPanel.AccessibleContext.accessibleDescription")); // NOI18N
@@ -118,35 +171,104 @@ public class CodeSnifferOptionsPanel extends javax.swing.JPanel {
         if (codeSnifferScript != null) {
             codeSnifferScript = FileUtil.normalizeFile(codeSnifferScript);
             codeSnifferTextField.setText(codeSnifferScript.getAbsolutePath());
+            refresh();
         }
     }//GEN-LAST:event_browseButtonActionPerformed
 
-    void load() {
-        inputBoxStandard.removeAllItems();
-        for (String standard : this.options.getCodingStandards()) {
-            inputBoxStandard.addItem(standard);
-        }
+private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshButtonActionPerformed
+    refresh();
+}//GEN-LAST:event_refreshButtonActionPerformed
 
-        inputBoxStandard.setSelectedItem(options.getCodingStandard());
-        checkBoxShowWarnings.setSelected(options.hasShowWarnings());
-        codeSnifferTextField.setText(options.getShellScript());
+    /**
+     * Loads everything that were previously set (if any) and refresh
+     */
+    void load() {
+        command = CodeSnifferBuilder.createOrReturn();
+        
+        refresh();
     }
+    
+    /**
+     * Refresh current form
+     * Validates if PHPCS is installed and loads latest code standards
+     */
+    void refresh() {
+        // Remove all old standards
+        inputBoxStandard.removeAllItems();
+        
+        if(valid()) {
+            statusTextLabel.setText("Activated");
+            statusTextLabel.setForeground(new Color(16, 110, 0));
+
+            inputBoxStandard.setEnabled(true);
+            checkBoxShowWarnings.setEnabled(true);
+
+            for(String standard : this.options.getCodingStandards()) {
+                inputBoxStandard.addItem(standard);
+            }
+
+            inputBoxStandard.setSelectedItem(options.getCodingStandard());
+            checkBoxShowWarnings.setSelected(options.hasShowWarnings());
+            codeSnifferTextField.setText(options.getShellScript());
+        } else {
+            inputBoxStandard.setEnabled(false);
+            checkBoxShowWarnings.setEnabled(false);
+            checkBoxShowWarnings.setSelected(false);
+            statusTextLabel.setForeground(Color.RED);
+        }
+        
+        versionTextLabel.setText(command.getVersion());
+    }
+    
+    /**
+     * Validates form, PHPCS script and standards
+     * @return boolean
+     */
+    boolean valid() {
+        boolean isValid;
+        
+        String csPath = codeSnifferTextField.getText();
+        if(!csPath.equals("")) {
+            command.setShellScript(codeSnifferTextField.getText());
+        }
+        
+        // Gets PHPCS version, if "?" then, valid PHPCS were not found
+        if(command.getVersion().equals("?")) {
+            isValid = false;
+            
+            statusTextLabel.setText("Invalid CodeSniffer script");
+        } else {
+            // Gets available standards
+            List<String> availableStandards = command.getAvailableStandards();
+            options = new CodeSnifferOptions(availableStandards);
+
+            if(availableStandards.isEmpty()) {
+                isValid = false;
+                statusTextLabel.setText("No code standards found");
+            } else {
+                isValid = true;
+            }
+        }
+        
+        return isValid;
+    }       
 
     void store() {
-        // Only add when a standard exists
-        options.setCodingStandard((String) inputBoxStandard.getSelectedItem());
-        options.setShowWarnings(checkBoxShowWarnings.isSelected());
-        options.setShellScript(codeSnifferTextField.getText());
+        if(valid()) {
+            // Only add when a standard exists
+            String selectedItem = (String) inputBoxStandard.getSelectedItem();
+            if(selectedItem != null) {
+                options.setCodingStandard((String) inputBoxStandard.getSelectedItem());
+            }
 
-        // or:
-        // SomeSystemOption.getDefault().setSomeStringProperty(someTextField.getText());
+            options.setShowWarnings(checkBoxShowWarnings.isSelected());
+            options.setShellScript(codeSnifferTextField.getText());
 
+            // or:
+            // SomeSystemOption.getDefault().setSomeStringProperty(someTextField.getText());
+        }
     }
 
-    boolean valid() {
-        // TODO check whether form is consistent and complete
-        return true;
-    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton browseButton;
     private javax.swing.JCheckBox checkBoxShowWarnings;
@@ -154,5 +276,10 @@ public class CodeSnifferOptionsPanel extends javax.swing.JPanel {
     private javax.swing.JTextField codeSnifferTextField;
     private javax.swing.JComboBox inputBoxStandard;
     private javax.swing.JLabel labelStandard;
+    private javax.swing.JButton refreshButton;
+    private javax.swing.JLabel statusLabel;
+    private javax.swing.JLabel statusTextLabel;
+    private javax.swing.JLabel versionLabel;
+    private javax.swing.JLabel versionTextLabel;
     // End of variables declaration//GEN-END:variables
 }
