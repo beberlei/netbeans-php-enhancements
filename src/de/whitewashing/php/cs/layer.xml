@@ -16,6 +16,22 @@
                     </file>
                 </folder>
             </folder>
+            <folder name="javascript">
+                <folder name="Popup">
+                    <file name="de-whitewashing-php-cs-CodeSnifferAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/PHP/de-whitewashing-php-cs-CodeSnifferAction.instance"/>
+                        <attr name="position" intvalue="875"/>
+                    </file>
+                </folder>
+            </folder>
+            <folder name="x-css">
+                <folder name="Popup">
+                    <file name="de-whitewashing-php-cs-CodeSnifferAction.shadow">
+                        <attr name="originalFile" stringvalue="Actions/PHP/de-whitewashing-php-cs-CodeSnifferAction.instance"/>
+                        <attr name="position" intvalue="875"/>
+                    </file>
+                </folder>
+            </folder>
         </folder>
         <folder name="AnnotationTypes">
             <file name="de-whitewashing-php-cs-annotation-warning.xml" url="nbresloc:/de/whitewashing/php/cs/resources/cs-warn-annotation.xml"/>
@@ -23,7 +39,7 @@
         </folder>
     </folder>
     <folder name="Shortcuts">
-        <file name="S-F9.shadow"> 
+        <file name="S-F12.shadow"> 
             <attr name="originalFile" stringvalue="Actions/PHP/de-whitewashing-php-cs-CodeSnifferAction.instance"/>
         </file>
     </folder>
