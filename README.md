@@ -9,11 +9,10 @@ The module automatically scans for the "phpcs" executable inside the enviroment 
 ##Features:
 
 1. PHP Coding Standards Support for the Tasks Window.
-2. Highlighting of Violations (in editor):
-
-  i. Right click on editor > __"Show Coding Standards Violations"__ or;
-  ii. Shift + F12 hotkey.
-3. Error stripe violations highlight: Every error appears as a little horizontal line at the right side of editor scrollbar.
+1. Highlighting of Violations (in editor):
+  * Right click on editor > __"Show Coding Standards Violations"__ or;
+  * Shift + F12 hotkey.
+1. Error stripe violations highlight: Every error appears as a little horizontal line at the right side of editor scrollbar.
 
 TASK WINDOW
 ==============
