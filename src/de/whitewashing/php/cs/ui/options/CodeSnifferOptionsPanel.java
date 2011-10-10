@@ -265,7 +265,7 @@ private void refreshButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN
 
             options.setShowWarnings(checkBoxShowWarnings.isSelected());
             options.setShellScript(codeSnifferTextField.getText());
-
+            
             // or:
             // SomeSystemOption.getDefault().setSomeStringProperty(someTextField.getText());
         }

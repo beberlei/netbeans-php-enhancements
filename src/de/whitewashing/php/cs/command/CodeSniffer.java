@@ -19,6 +19,7 @@ import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
 import org.openide.DialogDisplayer;
 import org.openide.NotifyDescriptor;
+import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -173,11 +174,11 @@ public class CodeSniffer {
         CodeSnifferFileListener l = new CodeSnifferFileListener();
         l.setLogResult(rs);
         fo.addFileChangeListener(l);
-
+        
         try {
             DataObject d = DataObject.find(fo);
             LineCookie cookie = d.getCookie(LineCookie.class);
-
+            
             Line.Set lineSet = null;
             Line line = null;
             for (int i = 0; i < rs.getCsErrors().size(); i++) {
@@ -261,14 +262,14 @@ public class CodeSniffer {
             if(ln.indexOf("Fatal error:") >= 0 || ln.indexOf("Parse error:") >= 0) {
                 if(ln.indexOf("Fatal error:") >= 0) {
                     Matcher m = Pattern.compile(
-                            "Fatal error:\\s+ (.*?:[0-9]+)",
+                            "Fatal error:\\s+(.*(?:line\\s+|:)[0-9]+)",
                             Pattern.CASE_INSENSITIVE
                     ).matcher(ln);
                     if(m.find())
                         message = m.group(1);
                 } else if(ln.indexOf("Parse error:") >= 0) {
                     Matcher m = Pattern.compile(
-                            "Parse error:\\s+(.*line [0-9]+)",
+                            "Parse error:\\s+(.*(?:line\\s+|:)[0-9]+)",
                             Pattern.CASE_INSENSITIVE
                     ).matcher(ln);
                     if(m.find())

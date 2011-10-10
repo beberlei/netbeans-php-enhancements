@@ -6,7 +6,6 @@
 package de.whitewashing.php.cs.command;
 
 import de.whitewashing.php.cs.ui.options.CodeSnifferOptions;
-import java.util.ArrayList;
 
 /**
  * Simple factory/singleton that creates a unique CodeSniffer instance based
@@ -27,7 +26,6 @@ public class CodeSnifferBuilder {
 
     public static CodeSniffer create() {
         CodeSnifferOptions options = new CodeSnifferOptions();
-
         return (codeSniffer = new CodeSniffer(options.getShellScript(), options.getCodingStandard(), options.hasShowWarnings()));
     }
 }

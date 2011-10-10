@@ -5,7 +5,6 @@
 package de.whitewashing.php.cs;
 
 import de.whitewashing.php.cs.command.CodeSnifferBuilder;
-import de.whitewashing.php.cs.command.CodeSniffer;
 import javax.swing.JMenuItem;
 import org.openide.cookies.EditorCookie;
 import org.openide.nodes.Node;
@@ -17,15 +16,13 @@ import org.openide.filesystems.FileObject;
 
 public final class CodeSnifferAction extends CookieAction {
 
-    private CodeSniffer codeSniffer = CodeSnifferBuilder.createOrReturn();
-
     protected void performAction(Node[] activatedNodes) {
         if(activatedNodes.length != 1) {
             return;
         }
 
         FileObject fo = getFileObject(activatedNodes[0]);
-        this.codeSniffer.execute(fo, true);
+        CodeSnifferBuilder.createOrReturn().execute(fo, true);
     }
 
     /**
@@ -95,7 +92,7 @@ public final class CodeSnifferAction extends CookieAction {
 
     protected JMenuItem setEnabledForExistingBinary(JMenuItem item)
     {
-        item.setEnabled(this.codeSniffer.isEnabled());
+        item.setEnabled(CodeSnifferBuilder.createOrReturn().isEnabled());
         return item;
     }
 }
