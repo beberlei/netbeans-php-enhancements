@@ -4,13 +4,12 @@
  */
 package de.whitewashing.php.cs.command;
 
+import java.io.BufferedReader;
 import java.util.concurrent.ExecutionException;
 import java.io.File;
 import java.io.IOException;
 import java.io.Reader;
-import java.lang.String;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.List;
 import java.util.concurrent.Future;
 import java.util.regex.Matcher;
@@ -208,12 +207,7 @@ public class CodeSniffer {
     private String getStringFromReader(Reader reader)
         throws IOException
     {
-        char[] chars = new char[1024];
-        reader.read(chars);
-        StringBuilder sb = new StringBuilder();
-        sb.append(chars);
-
-        return sb.toString();
+        return new BufferedReader(reader).readLine();
     }
 
     /**
@@ -230,6 +224,7 @@ public class CodeSniffer {
          * @return Reader
          */
         public Reader execute(ExternalProcessBuilder builder) {
+            builder = builder.redirectErrorStream(true);
             CodeSnifferOutput output = new CodeSnifferOutput();
 
             ExecutionDescriptor descriptor = new ExecutionDescriptor()
@@ -257,25 +252,23 @@ public class CodeSniffer {
     public void handlePhpExceptions(Reader reader)
         throws CodeSnifferPhpException, IOException
     {
-        // Check if no fatal errors occured in PHPCS
-        char[] buffer = new char[1024];
-        int numCharsRead;
-        while((numCharsRead = reader.read(buffer)) > 0) {
-            String ln = (new String(buffer, 0, numCharsRead));
+        BufferedReader output = new BufferedReader(reader);
+        String ln;
+        while((ln = output.readLine()) != null) {
             String message = "";
 
             // Treats fatal errors and parse errors that PHP may throw
             if(ln.indexOf("Fatal error:") >= 0 || ln.indexOf("Parse error:") >= 0) {
                 if(ln.indexOf("Fatal error:") >= 0) {
                     Matcher m = Pattern.compile(
-                            "Fatal error: (.*?:[0-9]+)",
+                            "Fatal error:\\s+ (.*?:[0-9]+)",
                             Pattern.CASE_INSENSITIVE
                     ).matcher(ln);
                     if(m.find())
                         message = m.group(1);
                 } else if(ln.indexOf("Parse error:") >= 0) {
                     Matcher m = Pattern.compile(
-                            "Parse error: (.*line [0-9]+)",
+                            "Parse error:\\s+(.*line [0-9]+)",
                             Pattern.CASE_INSENSITIVE
                     ).matcher(ln);
                     if(m.find())
