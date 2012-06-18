@@ -4,6 +4,7 @@
  */
 package de.whitewashing.php.cs.command;
 
+import java.io.BufferedReader;
 import java.util.concurrent.ExecutionException;
 import java.io.File;
 import java.io.IOException;
@@ -11,9 +12,14 @@ import java.io.Reader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Future;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import org.netbeans.api.extexecution.ExecutionDescriptor;
 import org.netbeans.api.extexecution.ExecutionService;
 import org.netbeans.api.extexecution.ExternalProcessBuilder;
+import org.openide.DialogDisplayer;
+import org.openide.NotifyDescriptor;
+import org.openide.cookies.EditorCookie;
 import org.openide.cookies.LineCookie;
 import org.openide.filesystems.FileObject;
 import org.openide.filesystems.FileUtil;
@@ -35,6 +41,11 @@ public class CodeSniffer {
     private String codingStandard;
     private boolean showWarnings;
 
+    public void setShellScript(String shellScript) {
+        this.shellScript = shellScript;
+    }
+    
+
     public CodeSniffer(String shellScript, String codingStandard, boolean showWarnings) {
         this.shellScript = shellScript;
         this.codingStandard = codingStandard;
@@ -42,7 +53,43 @@ public class CodeSniffer {
     }
 
     public boolean isEnabled() {
-        return this.shellScript !=null && new File(this.shellScript).exists();
+        if(this.shellScript == null || this.shellScript.equals("")) {
+            return false;
+        } else {
+            File shellFile = new File(this.shellScript);
+            return shellFile.isFile() && shellFile.canExecute();
+        }
+    }
+    
+    public String getVersion() {
+        if(!isEnabled()) {
+            return "?";
+        }
+        
+        ExternalProcessBuilder procBuilder = new ExternalProcessBuilder(this.shellScript)
+                .addArgument("--version");
+
+        try {
+            ProcessExecutor executor = new ProcessExecutor();
+            Reader executedProcess = executor.execute(procBuilder);
+            
+            // Handle PHP Exceptions
+            handlePhpExceptions(executedProcess);
+            
+            String versionLine = this.getStringFromReader(executedProcess);
+            Pattern pattern = Pattern.compile("(?:CodeSniffer.*?)(?:v\\.?(?:ersion)?\\s+)([0-9]+\\.[0-9]+(?:\\.[0-9]+)?)", Pattern.CASE_INSENSITIVE);
+            Matcher m = pattern.matcher(versionLine);
+            if(!m.find()) {
+                return "?";
+            }
+            
+            return m.group(1);
+        } catch(CodeSnifferPhpException e) {
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(e.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+            return "?";
+        } catch(java.io.IOException e) {
+            return "?";
+        }
     }
 
     public List<String> getAvailableStandards() {
@@ -50,12 +97,24 @@ public class CodeSniffer {
             return new ArrayList<String>();
         }
         
-        ExternalProcessBuilder procBuilder = new ExternalProcessBuilder(this.shellScript)
-                .addArgument("-i");
+        try {
+            ExternalProcessBuilder procBuilder = new ExternalProcessBuilder(this.shellScript)
+                    .addArgument("-i");
 
-        ProcessExecutor executor = new ProcessExecutor();
-        StupidStandardsOutputParser parser = new StupidStandardsOutputParser();
-        return parser.parse(executor.execute(procBuilder));
+            ProcessExecutor executor = new ProcessExecutor();
+            StupidStandardsOutputParser parser = new StupidStandardsOutputParser();
+
+            Reader executedProcess = executor.execute(procBuilder);
+
+            // Handle PHP Exceptions
+            handlePhpExceptions(executedProcess);
+            
+            return parser.parse(executedProcess);
+        } catch(java.io.IOException e) {
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(e.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
+        }
+        
+        return new ArrayList<String>();
     }
 
     public CodeSnifferXmlLogResult execute(FileObject fo) {
@@ -68,9 +127,9 @@ public class CodeSniffer {
         if(parent == null || this.isEnabled() == false) {
             return CodeSnifferXmlLogResult.empty();
         }
-
+        
+        // Executes PHPCS
         ExternalProcessBuilder externalProcessBuilder;
-
         if (this.showWarnings) {
             externalProcessBuilder = new ExternalProcessBuilder(this.shellScript)
                 .workingDirectory(parent)
@@ -87,11 +146,27 @@ public class CodeSniffer {
         }
         
         CodeSnifferXmlLogParser parser = new CodeSnifferXmlLogParser();
-        CodeSnifferXmlLogResult rs = parser.parse(new ProcessExecutor().execute(externalProcessBuilder));
+        Reader executedProcess = new ProcessExecutor().execute(externalProcessBuilder);
 
-        if(annotateLines) {
-            annotateWithCodingStandardHints(fo, rs);
+        CodeSnifferXmlLogResult rs = CodeSnifferXmlLogResult.empty();
+        try {
+            // Handle PHP Exceptions
+            handlePhpExceptions(executedProcess);
+
+            // Parse response
+            rs = parser.parse(executedProcess);
+            if(annotateLines) {
+                annotateWithCodingStandardHints(fo, rs);
+            }
+
+            // Check if we have no errors at all
+            if(rs.getCsErrors().isEmpty() && rs.getCsWarnings().isEmpty())
+                DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message("Great!\nNo errors or warnings found.", NotifyDescriptor.INFORMATION_MESSAGE));
+        } catch(java.io.IOException e) {
+            DialogDisplayer.getDefault().notify(new NotifyDescriptor.Message(e.getMessage(), NotifyDescriptor.ERROR_MESSAGE));
         }
+
+        // Progress bar finish
         return rs;
     }
 
@@ -99,11 +174,11 @@ public class CodeSniffer {
         CodeSnifferFileListener l = new CodeSnifferFileListener();
         l.setLogResult(rs);
         fo.addFileChangeListener(l);
-
+        
         try {
             DataObject d = DataObject.find(fo);
             LineCookie cookie = d.getCookie(LineCookie.class);
-
+            
             Line.Set lineSet = null;
             Line line = null;
             for (int i = 0; i < rs.getCsErrors().size(); i++) {
@@ -121,6 +196,20 @@ public class CodeSniffer {
             Exceptions.printStackTrace(ex);
         }
     }
+    
+    /**
+     * Creates a simple string from the given input reader. 
+     * This method will not handle exceptions.
+     *
+     * @param reader The raw input stream.
+     *
+     * @return String
+     */
+    private String getStringFromReader(Reader reader)
+        throws IOException
+    {
+        return new BufferedReader(reader).readLine();
+    }
 
     /**
      * Small utility class that is used to execute an external CodeSniffer process.
@@ -136,6 +225,7 @@ public class CodeSniffer {
          * @return Reader
          */
         public Reader execute(ExternalProcessBuilder builder) {
+            builder = builder.redirectErrorStream(true);
             CodeSnifferOutput output = new CodeSnifferOutput();
 
             ExecutionDescriptor descriptor = new ExecutionDescriptor()
@@ -155,6 +245,47 @@ public class CodeSniffer {
 
             return output.getReader();
         }
+    }
+    
+    /**
+     * Reads the stream searching for fatal errors when executing PHPCS
+     */
+    public void handlePhpExceptions(Reader reader)
+        throws CodeSnifferPhpException, IOException
+    {
+        BufferedReader output = new BufferedReader(reader);
+        String ln;
+        while((ln = output.readLine()) != null) {
+            String message = "";
+
+            // Treats fatal errors and parse errors that PHP may throw
+            if(ln.indexOf("Fatal error:") >= 0 || ln.indexOf("Parse error:") >= 0) {
+                if(ln.indexOf("Fatal error:") >= 0) {
+                    Matcher m = Pattern.compile(
+                            "Fatal error:\\s+(.*(?:line\\s+|:)[0-9]+)",
+                            Pattern.CASE_INSENSITIVE
+                    ).matcher(ln);
+                    if(m.find())
+                        message = m.group(1);
+                } else if(ln.indexOf("Parse error:") >= 0) {
+                    Matcher m = Pattern.compile(
+                            "Parse error:\\s+(.*(?:line\\s+|:)[0-9]+)",
+                            Pattern.CASE_INSENSITIVE
+                    ).matcher(ln);
+                    if(m.find())
+                        message = m.group(1);
+                }
+
+                String finalMessage = "A fatal error occured, check your PHPCS installation.";
+                if(!message.equals(""))
+                    finalMessage += "\nError:\n" + message;
+
+                reader.reset();
+                throw new CodeSnifferPhpException(finalMessage);
+            }
+        }
+        
+        reader.reset();
     }
 
     /**
@@ -195,12 +326,7 @@ public class CodeSniffer {
          */
         private String getStringFromReader(Reader reader) {
             try {
-                char[] chars = new char[1024];
-                reader.read(chars);
-                StringBuilder sb = new StringBuilder();
-                sb.append(chars);
-
-                return sb.toString();
+                return CodeSniffer.this.getStringFromReader(reader);
             } catch (IOException e) {
                 return this.DEFAULT_STANDARDS;
             }

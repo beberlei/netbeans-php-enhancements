@@ -4,7 +4,6 @@
  */
 package de.whitewashing.php.cs.ui.options;
 
-import de.whitewashing.php.cs.command.CodeSniffer;
 import de.whitewashing.php.cs.command.CodeSnifferBuilder;
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;
@@ -62,10 +61,7 @@ public final class CodeSnifferOptionsPanelController extends OptionsPanelControl
 
     private CodeSnifferOptionsPanel getPanel() {
         if (panel == null) {
-            CodeSniffer command = CodeSnifferBuilder.createOrReturn();
-            CodeSnifferOptions options = new CodeSnifferOptions(command.getAvailableStandards());
-            
-            panel = new CodeSnifferOptionsPanel(options);
+            panel = new CodeSnifferOptionsPanel();
         }
         return panel;
     }

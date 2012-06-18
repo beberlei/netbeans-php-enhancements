@@ -6,8 +6,6 @@
 package de.whitewashing.php.cs.ui.options;
 
 import de.whitewashing.php.cs.command.CodeSniffer;
-import de.whitewashing.php.cs.command.CodeSniffer;
-import de.whitewashing.php.cs.command.CodeSnifferBinary;
 import de.whitewashing.php.cs.command.CodeSnifferBinary;
 import java.util.ArrayList;
 import java.util.List;
