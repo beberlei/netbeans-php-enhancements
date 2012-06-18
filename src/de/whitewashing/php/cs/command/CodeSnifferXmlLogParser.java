@@ -46,6 +46,7 @@ public class CodeSnifferXmlLogParser {
 
         DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
         DocumentBuilder builder;
+        String exception = "";
         try {
             builder = factory.newDocumentBuilder();
             Document document;
@@ -70,7 +71,7 @@ public class CodeSnifferXmlLogParser {
         } catch (ParserConfigurationException ex) {
             
         } catch(SAXParseException ex) {
-            
+            exception = ex.getMessage();
         } catch (SAXException ex) {
             
         }

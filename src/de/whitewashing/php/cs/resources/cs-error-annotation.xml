@@ -6,5 +6,7 @@
       visible="true"
       glyph="nbresloc:/de/whitewashing/php/cs/resources/cserror.png"
       highlight="#FFCFCF"
+      custom_sidebar_color="#FF0000"
       type="line"
+      severity="warning"
 />
