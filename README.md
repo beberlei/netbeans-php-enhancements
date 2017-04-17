@@ -6,7 +6,7 @@ No Warranty whatsoever for this, it might break your Netbeans ;-)
 Tested only on Netbeans 7, but, should work with 6.7+.
 The module automatically scans for the "phpcs" executable inside the enviroment path.
 
-##Features:
+## Features:
 
 1. PHP Coding Standards Support for the Tasks Window.
 1. Highlighting of Violations (in editor):
@@ -50,7 +50,7 @@ Petr Pisl, tprochazka, Alexandre Haguiar
 
 CHANGELOG
 ===============
-###Version __1.2.0__:
+### Version __1.2.0__:
 * __Added__: Shortcut, press Shift+F12 to analyse current file;
 * __Added__: Validation to the form/panel. Validates if PHPCS is working and if there are any valid Code Standards;
 * __Added__: Validation on preferences storage, avoids invalid settings to be saved;
